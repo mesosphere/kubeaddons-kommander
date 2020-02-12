@@ -1,0 +1,12 @@
+---
+kommander:
+  display_name: kommander
+  description: kommander
+  logo: kommander/logo.svg
+  category: other
+  overview: kommander/overview.md
+  resources:
+    links:
+      - type: support
+        title: Submit a Support Request
+        link: https://d2iq.com/services-and-support

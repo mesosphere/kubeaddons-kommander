@@ -22,7 +22,7 @@ import (
 )
 
 const (
-	defaultKubernetesVersion = "1.15.6"
+	defaultKubernetesVersion = "1.16.4"
 	patchStorageClass        = `{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}`
 )
 

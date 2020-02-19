@@ -41,7 +41,7 @@ spec:
   chartReference:
     chart: kommander
     repo: https://mesosphere.github.io/charts/stable
-    version: 0.4.8
+    version: 0.4.11
     values: |
       ---
       ingress:

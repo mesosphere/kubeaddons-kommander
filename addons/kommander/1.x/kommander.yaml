@@ -68,6 +68,13 @@ spec:
           deployment:
             annotations:
               configmap.reloader.stakater.com/reload: kommander-kubeaddons-config
+              secret.reloader.stakater.com/reload: kommander-karma-client-tls
+
+      kommander-thanos:
+        thanos:
+          query:
+            deploymentAnnotations:
+              secret.reloader.stakater.com/reload: kommander-thanos-client-tls
 
       kubeaddons-catalog:
         image:

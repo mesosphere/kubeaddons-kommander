@@ -6,7 +6,7 @@ metadata:
   labels:
     kubeaddons.mesosphere.io/name: kommander
   annotations:
-    catalog.kubeaddons.mesosphere.io/addon-revision: "1.0.0-16"
+    catalog.kubeaddons.mesosphere.io/addon-revision: "1.0.0-17"
     appversion.kubeaddons.mesosphere.io/kommander: "1.0.0"
     endpoint.kubeaddons.mesosphere.io/kommander: /ops/portal/kommander/ui
     appversion.kubeaddons.mesosphere.io/thanos: 0.3.9
@@ -74,3 +74,6 @@ spec:
           repository: mesosphere/kubeaddons-catalog
           tag: "v0.8.2"
           pullPolicy: IfNotPresent
+
+      kommander-ui:
+        kubernetesVersionsSelection: '["1.16.4", "1.16.3"]'

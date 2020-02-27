@@ -74,3 +74,6 @@ spec:
           repository: mesosphere/kubeaddons-catalog
           tag: "v0.8.3"
           pullPolicy: IfNotPresent
+
+      kommander-ui:
+        kubernetesVersionsSelection: '["1.16.4", "1.16.3"]'

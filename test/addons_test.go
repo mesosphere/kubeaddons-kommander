@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"sync"
 	"testing"
 
 	"github.com/blang/semver"
@@ -97,8 +98,15 @@ func testgroup(t *testing.T, groupname string) error {
 	}
 	defer ph.Cleanup()
 
+	wg := &sync.WaitGroup{}
+	stop := make(chan struct{})
+	go temp.LoggingHook(t, cluster, wg, stop)
+
 	ph.Validate()
 	ph.Deploy()
+
+	close(stop)
+	wg.Wait()
 
 	return nil
 }

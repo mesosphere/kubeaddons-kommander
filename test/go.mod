@@ -6,7 +6,7 @@ require (
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/go-logr/zapr v0.1.1 // indirect
 	github.com/imdario/mergo v0.3.8 // indirect
-	github.com/mesosphere/kubeaddons v0.9.6
+	github.com/mesosphere/kubeaddons v0.9.7
 	go.uber.org/atomic v1.5.1 // indirect
 	go.uber.org/multierr v1.4.0 // indirect
 	go.uber.org/zap v1.13.0 // indirect

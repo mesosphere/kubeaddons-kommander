@@ -26,6 +26,7 @@ const (
 	kbaRef    = "master"
 	kbaRemote = "origin"
 
+	controllerBundle         = "https://mesosphere.github.io/kubeaddons/bundle.yaml"
 	defaultKubernetesVersion = "1.16.4"
 	patchStorageClass        = `{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}`
 )
@@ -103,11 +104,15 @@ func testgroup(t *testing.T, groupname string) error {
 	}
 	defer cluster.Cleanup()
 
-	if err := temp.DeployController(cluster, "kind"); err != nil {
+	if err := kubectl("apply", "-f", controllerBundle); err != nil {
 		return err
 	}
 
 	addons := groups[groupname]
+	for _, addon := range addons {
+		overrides(addon)
+	}
+
 	ph, err := test.NewBasicTestHarness(t, cluster, addons...)
 	if err != nil {
 		return err

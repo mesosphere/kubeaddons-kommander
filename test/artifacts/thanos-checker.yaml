@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: thanos-checker
+spec:
+  template:
+    spec:
+      volumes:
+      - name: thanos-test
+        configMap:
+          name: thanos-test
+      containers:
+      - name: checker
+        image: alpine
+        command: ["/bin/sh"]
+        args: ["/opt/thanos/thanos-test.sh"]
+        volumeMounts:
+        - name: thanos-test
+          mountPath: /opt/thanos/
+      restartPolicy: Never
+  backoffLimit: 4
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: thanos-test
+data:
+  thanos-test.sh: |-
+        #!/bin/sh
+        set -euo pipefail
+        apk --no-cache add curl
+        curl kommander-kubeaddons-thanos-query-http.kommander.svc:10902

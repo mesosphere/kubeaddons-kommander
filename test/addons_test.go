@@ -6,8 +6,10 @@ import (
 	"os/exec"
 	"sync"
 	"testing"
+	"time"
 
 	"github.com/blang/semver"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/kind/pkg/apis/config/v1alpha3"
 	"sigs.k8s.io/kind/pkg/cluster"
 
@@ -134,6 +136,33 @@ func testgroup(t *testing.T, groupname string) error {
 
 	th := test.NewSimpleTestHarness(t)
 	th.Load(loadable.ValidateAddons(addons...), addonDeployment, addonDefaults, addonCleanup)
+
+	testFunc := func(t *testing.T) error {
+		if err := kubectl("apply", "-f", "./artifacts/thanos-checker.yaml"); err != nil {
+			return err
+		}
+
+		succeeded := false
+		timeout := time.Now().Add(time.Minute * 1)
+		for timeout.After(time.Now()) {
+			job, err := cluster.Client().BatchV1().Jobs("default").Get("thanos-checker", metav1.GetOptions{})
+			if err != nil {
+				return err
+			}
+			if job.Status.Succeeded == 1 {
+				succeeded = true
+				break
+			}
+			time.Sleep(time.Second * 1)
+		}
+
+		if !succeeded {
+			return fmt.Errorf("thanos checker job did not succeed within timeout")
+		}
+		t.Log("thanos checker job succeeded 🙃")
+		return nil
+	}
+	th.Load(test.Loadable{Plan: test.DefaultPlan, Jobs: test.Jobs{testFunc}})
 
 	defer th.Cleanup()
 	th.Validate()

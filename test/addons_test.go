@@ -11,7 +11,6 @@ import (
 	"sigs.k8s.io/kind/pkg/apis/config/v1alpha3"
 	"sigs.k8s.io/kind/pkg/cluster"
 
-	"github.com/mesosphere/kubeaddons/hack/temp"
 	"github.com/mesosphere/kubeaddons/pkg/api/v1beta1"
 	"github.com/mesosphere/kubeaddons/pkg/catalog"
 	"github.com/mesosphere/kubeaddons/pkg/repositories"
@@ -19,6 +18,7 @@ import (
 	"github.com/mesosphere/kubeaddons/pkg/repositories/local"
 	"github.com/mesosphere/kubeaddons/pkg/test"
 	"github.com/mesosphere/kubeaddons/pkg/test/cluster/kind"
+	"github.com/mesosphere/kubeaddons/pkg/test/loadable"
 )
 
 const (
@@ -113,18 +113,32 @@ func testgroup(t *testing.T, groupname string) error {
 		overrides(addon)
 	}
 
-	ph, err := test.NewBasicTestHarness(t, cluster, addons...)
+	wg := &sync.WaitGroup{}
+	stop := make(chan struct{})
+	go test.LoggingHook(t, cluster, wg, stop)
+
+	addonDeployment, err := loadable.DeployAddons(t, cluster, addons...)
 	if err != nil {
 		return err
 	}
-	defer ph.Cleanup()
 
-	wg := &sync.WaitGroup{}
-	stop := make(chan struct{})
-	go temp.LoggingHook(t, cluster, wg, stop)
+	addonCleanup, err := loadable.CleanupAddons(t, cluster, addons...)
+	if err != nil {
+		return err
+	}
 
-	ph.Validate()
-	ph.Deploy()
+	addonDefaults, err := loadable.WaitForAddons(t, cluster, addons...)
+	if err != nil {
+		return err
+	}
+
+	th := test.NewSimpleTestHarness(t)
+	th.Load(loadable.ValidateAddons(addons...), addonDeployment, addonDefaults, addonCleanup)
+
+	defer th.Cleanup()
+	th.Validate()
+	th.Deploy()
+	th.Default()
 
 	close(stop)
 	wg.Wait()

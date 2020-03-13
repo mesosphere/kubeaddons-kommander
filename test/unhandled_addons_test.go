@@ -16,7 +16,7 @@ func TestValidateUnhandledAddons(t *testing.T) {
 	}
 
 	if len(unhandled) != 0 {
-		names := make([]string, len(unhandled))
+		names := make([]string, 0, len(unhandled))
 		for _, addon := range unhandled {
 			names = append(names, addon.GetName())
 		}

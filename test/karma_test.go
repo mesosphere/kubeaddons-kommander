@@ -28,7 +28,6 @@ const (
 
 func karmaChecker(t *testing.T, cluster test.Cluster) test.Job {
 	return func(t *testing.T) error {
-		// find the running Karma Pod
 		karmaPod, err := findKarmaPod(cluster)
 		if err != nil {
 			return fmt.Errorf("could not find karma pod in cluster %s: %s", cluster.Name(), err)

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	k8sutils "github.com/mesosphere/kubeaddons-extrasteps/pkg/utils"
+	networkutils "github.com/mesosphere/ksphere-testing-framework/pkg/utils/networking"
 	"github.com/mesosphere/kubeaddons/pkg/test"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -38,7 +38,7 @@ func karmaChecker(t *testing.T, cluster test.Cluster) test.Job {
 		}
 
 		// create a port-forward so we can access the karma alerts api
-		localport, stop, err := k8sutils.PortForward(karmaPod.Namespace, karmaPod.Name, karmaPort)
+		localport, stop, err := networkutils.PortForward(cluster.Config(), karmaPod.Namespace, karmaPod.Name, karmaPort)
 		if err != nil {
 			return fmt.Errorf("could not set up port forward for pod/%s port %s: %s", karmaPod.Name, karmaPort, err)
 		}

@@ -66,7 +66,10 @@ func TestKommanderGroup(t *testing.T) {
 		addonCleanup,
 		test.Loadable{
 			Plan: test.DefaultPlan,
-			Jobs: test.Jobs{thanosChecker(t, cluster)},
+			Jobs: test.Jobs{
+				thanosChecker(t, cluster),
+				karmaChecker(t, cluster),
+			},
 		},
 	)
 

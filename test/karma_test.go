@@ -8,8 +8,9 @@ import (
 	"strings"
 	"testing"
 
+	testcluster "github.com/mesosphere/ksphere-testing-framework/pkg/cluster"
+	testharness "github.com/mesosphere/ksphere-testing-framework/pkg/harness"
 	networkutils "github.com/mesosphere/ksphere-testing-framework/pkg/utils/networking"
-	"github.com/mesosphere/kubeaddons/pkg/test"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -26,7 +27,7 @@ const (
 // Karma - Tests
 // -----------------------------------------------------------------------------
 
-func karmaChecker(t *testing.T, cluster test.Cluster) test.Job {
+func karmaChecker(t *testing.T, cluster testcluster.Cluster) testharness.Job {
 	return func(t *testing.T) error {
 		karmaPod, err := findKarmaPod(cluster)
 		if err != nil {
@@ -80,7 +81,7 @@ func karmaChecker(t *testing.T, cluster test.Cluster) test.Job {
 // Karma - Test Utils
 // -----------------------------------------------------------------------------
 
-func findKarmaPod(cluster test.Cluster) (*corev1.Pod, error) {
+func findKarmaPod(cluster testcluster.Cluster) (*corev1.Pod, error) {
 	pods, err := cluster.Client().CoreV1().Pods(ns).List(metav1.ListOptions{})
 	if err != nil {
 		return nil, err

@@ -5,11 +5,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mesosphere/kubeaddons/pkg/test"
+	testcluster "github.com/mesosphere/ksphere-testing-framework/pkg/cluster"
+	testharness "github.com/mesosphere/ksphere-testing-framework/pkg/harness"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func thanosChecker(t *testing.T, cluster test.Cluster) test.Job {
+func thanosChecker(t *testing.T, cluster testcluster.Cluster) testharness.Job {
 	return func(t *testing.T) error {
 		if err := kubectl("apply", "-f", "./artifacts/thanos-checker.yaml"); err != nil {
 			return err

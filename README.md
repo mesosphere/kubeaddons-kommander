@@ -2,7 +2,7 @@
 
 This is a [kubernetes addon](https://github.com/mesosphere/kubeaddons) repository which contains [Kommander](https://github.com/mesosphere/kommander) related addon applications.
 
-# Using and releasing `kubeaddons-kommander` repo
+# Using and Releasing `kubeaddons-kommander` Repository
 
 This repository follows the exact same rules that [`kubernetes-base-addons`](https://github.com/mesosphere/kubernetes-base-addons) does, please check documentation over there.
 

@@ -5,8 +5,8 @@ go 1.13
 require (
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/imdario/mergo v0.3.8 // indirect
-	github.com/mesosphere/ksphere-testing-framework v0.0.0-20200320191913-4ed3ad40a337
-	github.com/mesosphere/kubeaddons v0.10.2
+	github.com/mesosphere/ksphere-testing-framework v0.0.0-20200320204306-f29e7880920f
+	github.com/mesosphere/kubeaddons v0.11.0
 	go.uber.org/atomic v1.5.1 // indirect
 	go.uber.org/multierr v1.4.0 // indirect
 	go.uber.org/zap v1.13.0 // indirect

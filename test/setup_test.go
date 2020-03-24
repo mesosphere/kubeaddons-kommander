@@ -1,11 +1,11 @@
 package test
 
 import (
+	"github.com/mesosphere/ksphere-testing-framework/pkg/experimental"
 	"github.com/mesosphere/kubeaddons/pkg/api/v1beta1"
 	"github.com/mesosphere/kubeaddons/pkg/catalog"
 	"github.com/mesosphere/kubeaddons/pkg/repositories/git"
 	"github.com/mesosphere/kubeaddons/pkg/repositories/local"
-	"github.com/mesosphere/kubeaddons/pkg/test"
 )
 
 // -----------------------------------------------------------------------------
@@ -29,7 +29,7 @@ func init() {
 		panic(err)
 	}
 
-	groups, err = test.AddonsForGroupsFile("groups.yaml", cat)
+	groups, err = experimental.AddonsForGroupsFile("groups.yaml", cat)
 	if err != nil {
 		panic(err)
 	}

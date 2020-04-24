@@ -53,8 +53,6 @@ spec:
           issuer:
             name: kubernetes-ca
             kind: ClusterIssuer
-        konvoy:
-          allowUnofficialReleases: true
         kubefed:
           controllermanager:
             annotations:

@@ -4,7 +4,7 @@ This is a [kubernetes addon](https://github.com/mesosphere/kubeaddons) repositor
 
 # Using and Releasing `kubeaddons-kommander` Repository
 
-This repository mostly follows the same rules that [`kubernetes-base-addons`](https://github.com/mesosphere/kubernetes-base-addons) does, please check documentation over there.
+This repository mostly follows the same rules that [`kubernetes-base-addons`](https://github.com/mesosphere/kubernetes-base-addons) does. Please familiarize yourself with that documentation, and then see the differences below.
 
 - [README.md](https://github.com/mesosphere/kubernetes-base-addons/blob/master/README.md)
 - [RELEASE.md](https://github.com/mesosphere/kubernetes-base-addons/blob/master/RELEASE.md)

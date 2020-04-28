@@ -34,7 +34,7 @@ Only certain people are allowed to push to `testing` and `stable` branches. If y
 
 #### Hotfixing testing releases when problems are found on SOAK
 
-Instead of hotfixing testing released, we should create a new one.
+Instead of adding a hotfix to an already established release we should create a new one.
 When a major issue in "beta 3" is found on SOAK, we should follow the steps above to create "beta 4", and update SOAK with that. Same is true for RCs.
 
 In case we absolutely need to hotfix soak, we need to make sure to forwardport them to `master`:

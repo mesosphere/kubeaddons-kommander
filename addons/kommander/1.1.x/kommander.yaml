@@ -87,6 +87,5 @@ spec:
           annotations: {}
 
       kommander-ui:
-        kubernetesVersionsSelection: '["1.16.4", "1.16.3"]'
         podAnnotations: {}
         #  iam.amazonaws.com/role: xyz

@@ -14,7 +14,7 @@ This repository mostly follows the same rules that [`kubernetes-base-addons`](ht
 
 Kommander being a slightly different type of repository than `kubernetes-base-addons`, some details in releasing kommander are different.
 
-- Pre-releases are only tagged with `testing-` tags, no `stable-` tags for pre-releases. The `-rc` that will acutally be the stable GA release will be _also_ tagged with `stable-` tag (and w/o `-rc` suffix)
+- Pre-releases are only tagged with `testing-` tags, no `stable-` tags for pre-releases. The `-rc` that will actually be the stable GA release will be _also_ tagged with `stable-` tag (and w/o `-rc` suffix)
 - Kommander follows a more semver style versioning and is setup to be able to support multiple major and minor versions at the same time.
 
 ## Step by step guides to release Kommander versions (pre-releases, latest and previously released)

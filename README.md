@@ -21,7 +21,7 @@ Kommander being a slightly different type of repository than `kubernetes-base-ad
 
 Only certain people are allowed to push to `testing` and `stable` branches. If you are asked to do a release, but dont have permissions to push, please ask your manager.
 
-### Tag/release pre-releases and update update SOAK
+### Tag/release pre-releases and update SOAK
 
 1. fetch latest repo state: `git fetch`
 1. checkout `testing` branch: `git checkout testing`

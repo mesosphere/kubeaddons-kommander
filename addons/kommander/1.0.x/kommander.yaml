@@ -49,6 +49,17 @@ spec:
           traefik.ingress.kubernetes.io/priority: "2"
 
       kommander-cluster-lifecycle:
+        controller:
+          containers:
+            manager:
+              image:
+                tag: v0.4.12
+        webhook:
+          image:
+            tag: v0.4.12
+        utilityApiserver:
+          image:
+            tag: v0.4.12
         certificates:
           issuer:
             name: kubernetes-ca

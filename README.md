@@ -25,7 +25,7 @@ Only certain people are allowed to push to `testing` and `stable` branches. If y
 
 1. fetch latest repo state: `git fetch`
 1. checkout `testing` branch: `git checkout testing`
-1. _merge_ `origin/master` into `testing` and push updated `testing` branch: `git merge origin/master && git push`
+1. merge `origin/master` into `testing` and push updated `testing` branch: `git merge origin/master && git push`
 1. apply tags, kommander uses multiple tags at this point:
    1. apply and push "base" semver based tag: e.g. `git tag v1.1.0-beta.3 && git push origin v1.1.0-beta.3`
    1. apply and push "consumable" testing tag(s) for each supported k8s version: e.g. `git tag testing-1.16-1.1.0-beta.3 && git push origin testing-1.16-1.1.0-beta.3`

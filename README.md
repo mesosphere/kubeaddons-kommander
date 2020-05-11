@@ -48,7 +48,7 @@ Stable releases should be SOAKed for at least two weeks, after the soaking perio
 
 1. fetch latest repo state: `git fetch`
 1. checkout `stable` branch: `git checkout stable`
-1. _merge_ `origin/testing` into `stable` and push updated `stable` branch: `git merge origin/testing && git push`
+1. merge `origin/testing` into `stable` and push updated `stable` branch: `git merge origin/testing && git push`
 1. apply and push "consumable" stable tag(s) for supported k8s versions: e.g. `git tag stable-1.16-1.1.0 && git push origin stable-1.16-1.1.0`
 1. head to github and update release information for that prerelease: check [releases page](https://github.com/mesosphere/kubeaddons-kommander/releases) for up-to-date example. _Make sure to edit the "base" release_.
 

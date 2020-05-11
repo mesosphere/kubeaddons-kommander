@@ -54,7 +54,6 @@ Stable releases should be SOAKed for at least two weeks, after the soaking perio
 
 ### Dealing with previously released stable versions
 
-_This needs get more details in how to deal with these situations in general._
 
 Sometimes we might need to push a fix for an older version, in these cases we need to create a dedicated stable branch for these versions. E.g. in order to be able to push "Kommander 1.0.1" after "1.1.x" already was released, we have to create `stable-1.0.x` branch from `v1.0.0` tag. (`git checkout v1.0.0 && git checkout -b stable-1.0.x`). after that happened, we can create PRs against that branch and get things fixed.
 

@@ -6,18 +6,21 @@ metadata:
   labels:
     kubeaddons.mesosphere.io/name: kommander
   annotations:
-    catalog.kubeaddons.mesosphere.io/addon-revision: "1.1.0-17"
+    catalog.kubeaddons.mesosphere.io/addon-revision: "1.1.0-18"
     appversion.kubeaddons.mesosphere.io/kommander: "1.1.0-beta.4"
     endpoint.kubeaddons.mesosphere.io/kommander: /ops/portal/kommander/ui
     appversion.kubeaddons.mesosphere.io/thanos: 0.3.9
     appversion.kubeaddons.mesosphere.io/karma: 1.4.0
     appversion.kubeaddons.mesosphere.io/kommander-grafana: 6.6.0
+    appversion.kubeaddons.mesosphere.io/kommander-kubecost: 1.58.0
     endpoint.kubeaddons.mesosphere.io/thanos: /ops/portal/kommander/monitoring/query
     endpoint.kubeaddons.mesosphere.io/karma: /ops/portal/kommander/monitoring/karma
     endpoint.kubeaddons.mesosphere.io/kommander-grafana: "/ops/portal/kommander/monitoring/grafana"
+    endpoint.kubeaddons.mesosphere.io/kommander-kubecost: "/ops/portal/kommander/kubecost/"
     docs.kubeaddons.mesosphere.io/thanos: "https://thanos.io/getting-started.md/"
     docs.kubeaddons.mesosphere.io/karma: "https://github.com/prymitive/karma"
     docs.kubeaddons.mesosphere.io/kommander-grafana: "https://grafana.com/docs/"
+    docs.kubeaddons.mesosphere.io/kommander-kubecost: "https://docs.kubecost.com/"
     values.chart.helm.kubeaddons.mesosphere.io/kommander: "https://raw.githubusercontent.com/mesosphere/charts/master/stable/kommander/values.yaml"
     helmv2.kubeaddons.mesosphere.io/upgrade-strategy: '[{"upgradeFrom": "<=0.1.22", "strategy": "delete"}]'
 spec:

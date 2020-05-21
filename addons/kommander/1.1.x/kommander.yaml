@@ -39,8 +39,8 @@ spec:
     - name: none
       enabled: true
   chartReference:
-    chart: kommander
-    repo: https://mesosphere.github.io/charts/stable
+    chart: kommanderz
+    repo: https://mesosphere.github.io/charts/stablez
     version: 0.7.1
     values: |
       ---

@@ -48,14 +48,6 @@ spec:
         extraAnnotations:
           traefik.ingress.kubernetes.io/priority: "2"
 
-      yakcl-provisioning:
-        certificates:
-          issuer:
-            name: kubernetes-ca
-            kind: ClusterIssuer
-        konvoy:
-          allowUnofficialReleases: true
-                
       yakcl-federation:
         certificates:
           issuer:

@@ -70,6 +70,7 @@ func TestKommanderGroup(t *testing.T) {
 			Jobs: testharness.Jobs{
 				thanosChecker(t, cluster),
 				karmaChecker(t, cluster),
+				kubecostChecker(t, cluster),
 			},
 		},
 	)

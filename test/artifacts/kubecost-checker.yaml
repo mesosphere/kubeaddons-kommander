@@ -1,0 +1,54 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kubecost-checker
+spec:
+  template:
+    spec:
+      volumes:
+      - name: kubecost-test
+        configMap:
+          name: kubecost-test
+      containers:
+      - name: checker
+        image: alpine
+        command: ["/bin/sh"]
+        args: ["/opt/kubecost/kubecost-test.sh"]
+        volumeMounts:
+        - name: kubecost-test
+          mountPath: /opt/kubecost/
+      restartPolicy: Never
+  backoffLimit: 4
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kubecost-test
+data:
+  kubecost-test.sh: |-
+        #!/bin/sh
+        set -euo pipefail
+        apk --no-cache add curl jq
+        curl kommander-kubeaddons-cost-analyzer.kommander.svc:9090
+        curl kommander-kubecost-thanos-query-http.kommander.svc:10902
+
+        echo "Checking aggregatedCostModel api endpoint"
+        code=$(curl "kommander-kubeaddons-cost-analyzer.kommander.svc:9090/model/aggregatedCostModel?window=1d&aggregation=namespace" | jq --raw-output '.code')
+        if [[ "$code" -ne 200 ]] ; then
+          echo "Expected code 200, got $code instead"
+          exit 1
+        fi
+
+        echo "Checking prometheusQuery api endpoint"
+        status=$(curl "kommander-kubeaddons-cost-analyzer.kommander.svc:9090/api/prometheusQuery?query=kubecost_cluster_memory_working_set_bytes" | jq --raw-output '.status')
+        if [[ "$status" != "success" ]] ; then
+          echo "Expected status success, got $status instead"
+          exit 1
+        fi
+
+        echo "Checking thanosQuery api endpoint"
+        status=$(curl "kommander-kubeaddons-cost-analyzer.kommander.svc:9090/api/thanosQuery?query=kubecost_cluster_memory_working_set_bytes" | jq --raw-output '.status')
+        if [[ "$status" != "success" ]] ; then
+          echo "Expected status success, got $status instead"
+          exit 1
+        fi

@@ -6,11 +6,11 @@ metadata:
   labels:
     kubeaddons.mesosphere.io/name: kommander
   annotations:
-    catalog.kubeaddons.mesosphere.io/addon-revision: "1.1.0-28"
+    catalog.kubeaddons.mesosphere.io/addon-revision: "1.1.0-29"
     appversion.kubeaddons.mesosphere.io/kommander: "1.1.0-rc.2"
     endpoint.kubeaddons.mesosphere.io/kommander: /ops/portal/kommander/ui
-    appversion.kubeaddons.mesosphere.io/thanos: 0.3.9
-    appversion.kubeaddons.mesosphere.io/karma: 1.4.0
+    appversion.kubeaddons.mesosphere.io/thanos: 0.3.21
+    appversion.kubeaddons.mesosphere.io/karma: 1.4.1
     appversion.kubeaddons.mesosphere.io/kommander-grafana: 6.6.0
     endpoint.kubeaddons.mesosphere.io/thanos: /ops/portal/kommander/monitoring/query
     endpoint.kubeaddons.mesosphere.io/karma: /ops/portal/kommander/monitoring/karma

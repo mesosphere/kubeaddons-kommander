@@ -6,7 +6,7 @@ metadata:
   labels:
     kubeaddons.mesosphere.io/name: kommander
   annotations:
-    catalog.kubeaddons.mesosphere.io/addon-revision: "1.1.0-31"
+    catalog.kubeaddons.mesosphere.io/addon-revision: "1.1.0-32"
     appversion.kubeaddons.mesosphere.io/kommander: "1.1.0-rc.2"
     endpoint.kubeaddons.mesosphere.io/kommander: /ops/portal/kommander/ui
     appversion.kubeaddons.mesosphere.io/thanos: 0.3.21
@@ -41,21 +41,19 @@ spec:
   chartReference:
     chart: kommander
     repo: https://mesosphere.github.io/charts/stable
-    version: 0.8.12
+    version: 0.8.14
     values: |
       ---
       ingress:
         extraAnnotations:
           traefik.ingress.kubernetes.io/priority: "2"
 
-      yakcl-provisioning:
-        enabled: false
-      yakcl-licensing:
+      kommander-licensing:
         certificates:
           issuer:
             name: kubernetes-ca
             kind: ClusterIssuer
-      yakcl-federation:
+      kommander-federation:
         utilityApiserver:
           minimumKubernetesVersion: 1.16.0
         certificates:

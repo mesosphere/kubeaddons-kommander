@@ -6,8 +6,8 @@ metadata:
   labels:
     kubeaddons.mesosphere.io/name: kommander
   annotations:
-    catalog.kubeaddons.mesosphere.io/addon-revision: "1.1.0-33"
-    appversion.kubeaddons.mesosphere.io/kommander: "1.1.0-rc.2"
+    catalog.kubeaddons.mesosphere.io/addon-revision: "1.1.0-34"
+    appversion.kubeaddons.mesosphere.io/kommander: "1.1.0-rc.3"
     endpoint.kubeaddons.mesosphere.io/kommander: /ops/portal/kommander/ui
     appversion.kubeaddons.mesosphere.io/thanos: 0.3.21
     appversion.kubeaddons.mesosphere.io/karma: 1.4.1

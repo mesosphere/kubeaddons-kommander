@@ -31,7 +31,7 @@ Only pre-releases that are SOAKed for at least two weeks should be used as stabl
 1. fetch latest repo state: `git fetch`
 1. checkout the pre-release tag you want to make a stable release: e.g. `git checkout v1.1.0-rc.3`
 1. create new `stable-*` branch for that minor release: e.g. `git checkout -b stable-1.1.x`
-1. update kommanders `appVersion` to be stable by removing the pre-release suffix and commit that change to your newly created stable brnacht (remember to also update revision)
+1. update kommanders `appVersion` to be stable by removing the pre-release suffix and commit that change to your newly created `stable-*` branch (remember to also update revision)
 1. apply and push tags
    1. "base" semver based tag: e.g. `git tag v1.1.0 && git push origin v1.1.0`
    1. "consumable" stable tag(s) for supported k8s versions: e.g. `git tag stable-1.16-1.1.0 && git push origin stable-1.16-1.1.0`

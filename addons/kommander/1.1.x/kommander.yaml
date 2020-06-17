@@ -102,3 +102,7 @@ spec:
           kubecostDeployment:
             labels:
               vendor.kubecost.io/partner: d2iq
+          thanos:
+            query:
+              deploymentAnnotations:
+                secret.reloader.stakater.com/reload: kommander-kubecost-thanos-client-tls

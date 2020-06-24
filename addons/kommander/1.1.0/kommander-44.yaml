@@ -40,7 +40,7 @@ spec:
       enabled: true
   chartReference:
     chart: kommander
-    repo: https://mesosphere.github.io/charts/stable
+    repo: https://dlipovetsky.github.io/mesosphere-charts/stable
     version: 0.8.29
     values: |
       ---

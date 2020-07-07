@@ -6,7 +6,7 @@ metadata:
   labels:
     kubeaddons.mesosphere.io/name: kommander
   annotations:
-    catalog.kubeaddons.mesosphere.io/addon-revision: "1.1.0-50"
+    catalog.kubeaddons.mesosphere.io/addon-revision: "1.1.0-51"
     appversion.kubeaddons.mesosphere.io/kommander: "1.1.0-rc.5"
     endpoint.kubeaddons.mesosphere.io/kommander: /ops/portal/kommander/ui
     appversion.kubeaddons.mesosphere.io/thanos: 0.3.21
@@ -41,7 +41,7 @@ spec:
   chartReference:
     chart: kommander
     repo: https://mesosphere.github.io/charts/stable
-    version: 0.8.35
+    version: 0.8.36
     values: |
       ---
       ingress:
@@ -80,10 +80,6 @@ spec:
             deploymentAnnotations:
               secret.reloader.stakater.com/reload: kommander-thanos-client-tls
       kubeaddons-catalog:
-        image:
-          repository: mesosphere/kubeaddons-catalog
-          tag: "v0.8.3"
-          pullPolicy: IfNotPresent
         ingress:
           enable: false
           hostName: catalog.kubeaddons.localhost

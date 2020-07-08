@@ -1,0 +1,9 @@
+{
+   "update_jira_on_merge": {
+     "enabled": true,
+     "interactive": false,
+     "fix_version_map": {
+       "master": "Kommander 1.1.0 RC 6"
+     }
+   }
+}

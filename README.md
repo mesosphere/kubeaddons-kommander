@@ -37,7 +37,7 @@ Only pre-releases that are SOAKed for at least two weeks should be used as stabl
    1. "base" semver based tag: e.g. `git tag v1.1.0 && git push origin v1.1.0`
    1. "consumable" stable tag(s) for supported k8s versions: e.g. `git tag stable-1.16-1.1.0 && git push origin stable-1.16-1.1.0`
 1. head to github and update release information for that release: check [releases page](https://github.com/mesosphere/kubeaddons-kommander/releases) for up-to-date example. _Make sure to edit the "base" release_.
-1. add that new stable branch to mergebot config on `master` and set its version the the next patch release (usually `.1`)
+1. add that new stable branch to `mergebot-config.json` on `master` and set its version the the next patch release (usually `.1`)
 
 ### Dealing with previously released stable versions
 

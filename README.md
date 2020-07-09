@@ -50,4 +50,4 @@ Sometimes we might need to push a fix for an older version, in these cases we ne
 1. apply tags:
    1. apply and push "base" semver based tag: e.g. `git tag v1.0.1 && git push origin v1.0.1`
    1. apply and push "consumable" stable tag(s) for each supported k8s version: e.g. `git tag stable-1.16-1.0.1 && git push origin stable-1.16-1.0.1`
-1. update mergebot config on `master` and set its version to the next patch release
+1. update `mergebot-config.json` on `master` and set its version to the next patch release

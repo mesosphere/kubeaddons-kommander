@@ -18,6 +18,7 @@ This is a [kubernetes addon](https://github.com/mesosphere/kubeaddons) repositor
    1. apply and push "consumable" testing tag(s) for each supported k8s version: e.g. `git tag testing-1.16-1.1.0-beta.3 && git push origin testing-1.16-1.1.0-beta.3`
 1. head to github and update release information for that prerelease: check [releases page](https://github.com/mesosphere/kubeaddons-kommander/releases) for up-to-date example. _Make sure to edit the "base" release_.
 1. update SOAK by updating kommander `configVersion` tag in its `cluster.yaml`
+1. update mergebot config on `master` branch (only there) to reflect the next release (usually just increase the prerelease number)
 
 #### Hotfixing pre-releases when problems are found on SOAK
 
@@ -36,6 +37,7 @@ Only pre-releases that are SOAKed for at least two weeks should be used as stabl
    1. "base" semver based tag: e.g. `git tag v1.1.0 && git push origin v1.1.0`
    1. "consumable" stable tag(s) for supported k8s versions: e.g. `git tag stable-1.16-1.1.0 && git push origin stable-1.16-1.1.0`
 1. head to github and update release information for that release: check [releases page](https://github.com/mesosphere/kubeaddons-kommander/releases) for up-to-date example. _Make sure to edit the "base" release_.
+1. add that new stable branch to mergebot config on `master` and set its version the the next patch release (usually `.1`)
 
 ### Dealing with previously released stable versions
 
@@ -48,3 +50,4 @@ Sometimes we might need to push a fix for an older version, in these cases we ne
 1. apply tags:
    1. apply and push "base" semver based tag: e.g. `git tag v1.0.1 && git push origin v1.0.1`
    1. apply and push "consumable" stable tag(s) for each supported k8s version: e.g. `git tag stable-1.16-1.0.1 && git push origin stable-1.16-1.0.1`
+1. update mergebot config on `master` and set its version to the next patch release

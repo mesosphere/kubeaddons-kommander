@@ -18,7 +18,7 @@ This is a [kubernetes addon](https://github.com/mesosphere/kubeaddons) repositor
    1. apply and push "consumable" testing tag(s) for each supported k8s version: e.g. `git tag testing-1.16-1.1.0-beta.3 && git push origin testing-1.16-1.1.0-beta.3`
 1. head to github and update release information for that prerelease: check [releases page](https://github.com/mesosphere/kubeaddons-kommander/releases) for up-to-date example. _Make sure to edit the "base" release_.
 1. update SOAK by updating kommander `configVersion` tag in its `cluster.yaml`
-1. update mergebot config on `master` branch (only there) to reflect the next release (usually just increase the prerelease number)
+1. update `mergebot-config.json` on `master` branch (only there) to reflect the next release (usually just increase the prerelease number)
 
 #### Hotfixing pre-releases when problems are found on SOAK
 

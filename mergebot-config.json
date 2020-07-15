@@ -3,7 +3,7 @@
      "enabled": true,
      "interactive": false,
      "fix_version_map": {
-       "master": "Kommander 1.1.0 RC 6",
+       "master": "Kommander 1.1.0 RC 8",
        "stable-1.0.x": "Kommander 1.0.2"
      }
    }

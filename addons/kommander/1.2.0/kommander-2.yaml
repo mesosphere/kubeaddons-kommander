@@ -6,7 +6,7 @@ metadata:
   labels:
     kubeaddons.mesosphere.io/name: kommander
   annotations:
-    catalog.kubeaddons.mesosphere.io/addon-revision: "1.2.0-1"
+    catalog.kubeaddons.mesosphere.io/addon-revision: "1.2.0-2"
     appversion.kubeaddons.mesosphere.io/kommander: "1.2.0-beta.0"
     endpoint.kubeaddons.mesosphere.io/kommander: /ops/portal/kommander/ui
     appversion.kubeaddons.mesosphere.io/thanos: 0.3.21
@@ -42,6 +42,11 @@ spec:
     chart: kommander
     repo: https://mesosphere.github.io/charts/stable
     version: 0.8.41
+    valuesRemap:
+      "kubecost.cost-analyzer.thanos.storeSecretName": "kubecost.thanos.storeSecretName"
+      "kubecost.cost-analyzer.thanos.store": "kubecost.thanos.store"
+      "kubecost.cost-analyzer.prometheus.server.extraVolumes": "kubecost.prometheus.server.extraVolumes"
+      "kubecost.cost-analyzer.prometheus.server.sidecarContainers": "kubecost.prometheus.server.sidecarContainers"
     values: |
       ---
       ingress:

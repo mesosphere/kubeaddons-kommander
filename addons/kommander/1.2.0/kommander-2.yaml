@@ -45,6 +45,7 @@ spec:
     valuesRemap:
       "kubecost.cost-analyzer.thanos.storeSecretName": "kubecost.thanos.storeSecretName"
       "kubecost.cost-analyzer.thanos.store": "kubecost.thanos.store"
+      "kubecost.cost-analyzer.thanos.query": "kubecost.thanos.query"
       "kubecost.cost-analyzer.prometheus.server.extraVolumes": "kubecost.prometheus.server.extraVolumes"
       "kubecost.cost-analyzer.prometheus.server.sidecarContainers": "kubecost.prometheus.server.sidecarContainers"
     values: |

@@ -1,6 +1,7 @@
 package test
 
 import (
+	"strings"
 	"sync"
 	"testing"
 
@@ -13,15 +14,11 @@ import (
 	"sigs.k8s.io/kind/pkg/cluster"
 )
 
+
 func TestKommanderGroup(t *testing.T) {
 	t.Logf("testing group kommander")
 
-	version, err := semver.Parse(defaultKubernetesVersion)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	cluster, err := kind.NewCluster(version, cluster.CreateWithV1Alpha3Config(&v1alpha3.Cluster{}))
+	cluster, err := kind.NewClusterWithVersion(semver.MustParse(strings.TrimPrefix(defaultKubernetesVersion, "v")), cluster.CreateWithV1Alpha3Config(&v1alpha3.Cluster{}))
 	if err != nil {
 		// try to clean up in case cluster was created and reference available
 		if cluster != nil {

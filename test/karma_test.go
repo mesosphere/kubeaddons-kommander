@@ -1,6 +1,7 @@
 package test
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -82,7 +83,7 @@ func karmaChecker(t *testing.T, cluster testcluster.Cluster) testharness.Job {
 // -----------------------------------------------------------------------------
 
 func findKarmaPod(cluster testcluster.Cluster) (*corev1.Pod, error) {
-	pods, err := cluster.Client().CoreV1().Pods(ns).List(metav1.ListOptions{})
+	pods, err := cluster.Client().CoreV1().Pods(ns).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		return nil, err
 	}

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/mesosphere/kubeaddons/pkg/api/v1beta1"
+	"github.com/mesosphere/kubeaddons/pkg/api/v1beta2"
 	"github.com/mesosphere/kubeaddons/pkg/repositories/local"
 )
 
@@ -25,8 +25,8 @@ func TestValidateUnhandledAddons(t *testing.T) {
 }
 
 // TODO - this needs to be moved upstream to the test framework
-func findUnhandled() ([]v1beta1.AddonInterface, error) {
-	var unhandled []v1beta1.AddonInterface
+func findUnhandled() ([]v1beta2.AddonInterface, error) {
+	var unhandled []v1beta2.AddonInterface
 	repo, err := local.NewRepository("base", "../addons")
 	if err != nil {
 		return unhandled, err

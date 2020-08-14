@@ -19,6 +19,7 @@ This is a [kubernetes addon](https://github.com/mesosphere/kubeaddons) repositor
 1. head to github and update release information for that prerelease: check [releases page](https://github.com/mesosphere/kubeaddons-kommander/releases) for up-to-date example. _Make sure to edit the "base" release_.
 1. update SOAK by updating kommander `configVersion` tag in its `cluster.yaml`
 1. update `mergebot-config.json` on `master` branch (only there) to reflect the next release (usually just increase the prerelease number)
+1. create a new revision file and bump the `appversion.kubeaddons.mesosphere.io/kommander` annotation to reflect the next release (usually just increase the prerelease number)
 
 #### Hotfixing pre-releases when problems are found on SOAK
 

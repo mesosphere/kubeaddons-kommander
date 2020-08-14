@@ -1,6 +1,7 @@
 package test
 
 import (
+	"context"
 	"fmt"
 	"testing"
 	"time"
@@ -19,7 +20,7 @@ func kubecostChecker(t *testing.T, cluster testcluster.Cluster) testharness.Job 
 		succeeded := false
 		timeout := time.Now().Add(time.Minute * 1)
 		for timeout.After(time.Now()) {
-			job, err := cluster.Client().BatchV1().Jobs("default").Get("kubecost-checker", metav1.GetOptions{})
+			job, err := cluster.Client().BatchV1().Jobs("default").Get(context.TODO(), "kubecost-checker", metav1.GetOptions{})
 			if err != nil {
 				return err
 			}

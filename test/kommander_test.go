@@ -19,7 +19,7 @@ import (
 // as newer versions of Kubeaddons don't support HelmV2 anymore by default.
 // We need to update our charts for HelmV2 to move back to latest.
 // See https://jira.d2iq.com/browse/D2IQ-71000 for follow-up
-const kubeaddonsHoldVersion = "v0.18.0"
+const kubeaddonsHoldVersion = "v0.19.0"
 
 func TestKommanderGroup(t *testing.T) {
 	t.Logf("testing group kommander")

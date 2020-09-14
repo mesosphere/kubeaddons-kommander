@@ -16,7 +16,7 @@ const (
 	kbaRemote = "origin"
 
 	defaultKubernetesVersion = "1.18.8"
-	controllerBundle         = "https://mesosphere.github.io/kubeaddons/bundle.yaml"
+	controllerBundle         = "./bundle.yaml" // FIXME: see file for details
 	patchStorageClass        = `{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}`
 )
 

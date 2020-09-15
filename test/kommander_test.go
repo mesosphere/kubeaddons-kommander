@@ -10,14 +10,14 @@ import (
 	"github.com/mesosphere/ksphere-testing-framework/pkg/experimental"
 	testharness "github.com/mesosphere/ksphere-testing-framework/pkg/harness"
 	addontesters "github.com/mesosphere/kubeaddons/test/utils"
-	"sigs.k8s.io/kind/pkg/apis/config/v1alpha3"
+	"sigs.k8s.io/kind/pkg/apis/config/v1alpha4"
 	"sigs.k8s.io/kind/pkg/cluster"
 )
 
 func TestKommanderGroup(t *testing.T) {
 	t.Logf("testing group kommander")
 
-	cluster, err := kind.NewClusterWithVersion(semver.MustParse(strings.TrimPrefix(defaultKubernetesVersion, "v")), cluster.CreateWithV1Alpha3Config(&v1alpha3.Cluster{}))
+	cluster, err := kind.NewClusterWithVersion(semver.MustParse(strings.TrimPrefix(defaultKubernetesVersion, "v")), cluster.CreateWithV1Alpha4Config(&v1alpha4.Cluster{}))
 	if err != nil {
 		// try to clean up in case cluster was created and reference available
 		if cluster != nil {

@@ -47,7 +47,7 @@ New GA releases mainly happen on master branch, a `stable-*` maintenance branch 
 Only pre-releases that are SOAKed for at least two weeks should be used as stable releases. After the soaking period was successful, follow these steps:
 
 1. fetch latest repo state: `git fetch` and make sure you're on `master`
-1. copy and rename the latest prereleases file (the one becoming stable). Also update the `revision` and `appVersion` to be stable by removing the pre-release suffix and commit that change to `master` (remember to also update revision)
+1. update the `revision` and `appVersion` to be stable by removing the pre-release suffix and commit that change to `master` (remember to also update revision)
 1. apply and push tag: e.g. `git tag v1.1.0 && git push origin v1.1.0`
 1. create new `stable-*` branch for that minor release: e.g. `git checkout -b stable-1.1.x`. that way future updates have an easy target.
 1. head to github and update release information for that release: check [releases page](https://github.com/mesosphere/kubeaddons-kommander/releases) for up-to-date example.

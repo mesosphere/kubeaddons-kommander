@@ -5,7 +5,7 @@ metadata:
   labels:
     kubeaddons.mesosphere.io/name: kommander
   annotations:
-    catalog.kubeaddons.mesosphere.io/addon-revision: "1.2.0-11"
+    catalog.kubeaddons.mesosphere.io/addon-revision: "1.2.0-12"
     appversion.kubeaddons.mesosphere.io/kommander: "1.2.0-beta.2"
     endpoint.kubeaddons.mesosphere.io/kommander: /ops/portal/kommander/ui
     appversion.kubeaddons.mesosphere.io/thanos: 0.3.21
@@ -17,7 +17,7 @@ metadata:
     docs.kubeaddons.mesosphere.io/thanos: "https://thanos.io/getting-started.md/"
     docs.kubeaddons.mesosphere.io/karma: "https://github.com/prymitive/karma"
     docs.kubeaddons.mesosphere.io/kommander-grafana: "https://grafana.com/docs/"
-    values.chart.helm.kubeaddons.mesosphere.io/kommander: "https://raw.githubusercontent.com/mesosphere/charts/master/stable/kommander/values.yaml"
+    values.chart.helm.kubeaddons.mesosphere.io/kommander: "https://raw.githubusercontent.com/mesosphere/charts/c92d76b/stable/kommander/values.yaml"
     helmv2.kubeaddons.mesosphere.io/upgrade-strategy: '[{"upgradeFrom": "<=0.1.22",
       "strategy": "delete"}]'
 spec:
@@ -25,23 +25,23 @@ spec:
   kubernetes:
     minSupportedVersion: v1.15.6
   requires:
-  - matchLabels:
-      kubeaddons.mesosphere.io/name: cert-manager
+    - matchLabels:
+        kubeaddons.mesosphere.io/name: cert-manager
   cloudProvider:
-  - name: aws
-    enabled: true
-  - name: azure
-    enabled: true
-  - name: gcp
-    enabled: true
-  - name: docker
-    enabled: true
-  - name: none
-    enabled: true
+    - name: aws
+      enabled: true
+    - name: azure
+      enabled: true
+    - name: gcp
+      enabled: true
+    - name: docker
+      enabled: true
+    - name: none
+      enabled: true
   chartReference:
     chart: kommander
     repo: https://mesosphere.github.io/charts/stable
-    version: 0.11.4
+    version: 0.11.5
     values: |
       ---
       ingress:

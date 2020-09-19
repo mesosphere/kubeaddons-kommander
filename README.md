@@ -19,7 +19,7 @@ You still need to update the addon revision, but you **do not** need to copy the
 
 # Releasing from this repo
 
-- Kommander follows a semver style versioning and is setup to be able to support multiple major and minor versions at the same time. (See branches above)
+- Kommander follows a semver style versioning and is set up to be able to support multiple major and minor versions at the same time. (See branches above)
 
 ## Step by step guides to release Kommander versions (pre-releases, latest and previously released)
 

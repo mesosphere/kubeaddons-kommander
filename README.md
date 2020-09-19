@@ -4,7 +4,7 @@ This is a [kubernetes addon](https://github.com/mesosphere/kubeaddons) repositor
 
 # Contributing to this repository
 
-This [KEP](https://github.com/mesosphere/ksphere-platform/blob/master/keps/sig-ksphere-catalog/20200818-remove-revisions.md) changed the way we handle revision, which enables this repository to only maintain one revision per branch and removed the need to keep a flat hierarchy on master.
+This [KEP](https://github.com/mesosphere/ksphere-platform/blob/master/keps/sig-ksphere-catalog/20200818-remove-revisions.md) changed the way we handle revision, which enables this repository to only maintain one revision per branch and removes the need to keep a flat hierarchy on master.
 
 Kommander currently is supported in three different versions, which are reporesented by their respective branches:
 

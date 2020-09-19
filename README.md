@@ -55,7 +55,7 @@ Only pre-releases that are SOAKed for at least two weeks should be used as stabl
 1. in order to allow backports to that newly reated minor version, make sure that the charts minor version also is bumped.
 1. to make it easy for fellow colleagues, create a new directory on `master` (e.g. `1.2.0`) and your new stable branch (e.g. `1.1.1`) for people to work in)
 
-There is no need to merge back `stable-*` branches into master since we dont need to maintain a flat history anymore.
+There is no need to merge back `stable-*` branches into master since we don't need to maintain a flat history anymore.
 
 ### Dealing with previously released stable versions
 

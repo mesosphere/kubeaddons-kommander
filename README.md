@@ -28,7 +28,9 @@ You still need to update the addon revision, but you **do not** need to copy the
 Cutting a new pre-release is mainly adding a tag to `master` branch and updating some metadata.
 
 1. fetch latest repo state: `git fetch` and make sure you're on `master`
-1. apply tags to the commit you want to tag (usually `HEAD`): e.g. `git tag v1.1.0-beta.3 && git push origin v1.1.0-beta.3`
+1. apply tags to the commit you want to tag (usually `HEAD`), kommander uses multiple tags at this point:
+   1. apply and push "base" semver based tag: e.g. `git tag v1.1.0-beta.3 && git push origin v1.1.0-beta.3`
+   1. apply and push "consumable" testing tag(s) for each supported k8s version: e.g. `git tag testing-1.16-1.1.0-beta.3 && git push origin testing-1.16-1.1.0-beta.3`
 1. head to github and update release information for that prerelease: check [releases page](https://github.com/mesosphere/kubeaddons-kommander/releases) for up-to-date example.
 1. update SOAK by updating kommander `configVersion` tag in its `cluster.yaml`
 1. update repo for the next pre-release
@@ -48,7 +50,9 @@ Only pre-releases that are SOAKed for at least two weeks should be used as stabl
 
 1. fetch latest repo state: `git fetch` and make sure you're on `master`
 1. update the `revision` and `appVersion` to be stable by removing the pre-release suffix and commit that change to `master` (remember to also update revision)
-1. apply and push tag: e.g. `git tag v1.1.0 && git push origin v1.1.0`
+1. apply and push tags
+   1. "base" semver based tag: e.g. `git tag v1.1.0 && git push origin v1.1.0`
+   1. "consumable" stable tag(s) for supported k8s versions: e.g. `git tag stable-1.16-1.1.0 && git push origin stable-1.16-1.1.0`
 1. create new `stable-*` branch for that minor release: e.g. `git checkout -b stable-1.1.x`. that way future updates have an easy target.
 1. head to github and update release information for that release: check [releases page](https://github.com/mesosphere/kubeaddons-kommander/releases) for up-to-date example.
 1. add that new `stable-*` branch to `mergebot-config.json` on `master` and set its version to the next patch release (usually `.1`)

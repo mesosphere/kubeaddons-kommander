@@ -1,4 +1,3 @@
----
 apiVersion: kubeaddons.mesosphere.io/v1beta1
 kind: ClusterAddon
 metadata:
@@ -18,8 +17,9 @@ metadata:
     docs.kubeaddons.mesosphere.io/thanos: "https://thanos.io/getting-started.md/"
     docs.kubeaddons.mesosphere.io/karma: "https://github.com/prymitive/karma"
     docs.kubeaddons.mesosphere.io/kommander-grafana: "https://grafana.com/docs/"
-    values.chart.helm.kubeaddons.mesosphere.io/kommander: "https://raw.githubusercontent.com/mesosphere/charts/master/stable/kommander/values.yaml"
-    helmv2.kubeaddons.mesosphere.io/upgrade-strategy: '[{"upgradeFrom": "<=0.1.22", "strategy": "delete"}]'
+    values.chart.helm.kubeaddons.mesosphere.io/kommander: "https://raw.githubusercontent.com/mesosphere/charts/d71f1e0/stable/kommander/values.yaml"
+    helmv2.kubeaddons.mesosphere.io/upgrade-strategy: '[{"upgradeFrom": "<=0.1.22",
+      "strategy": "delete"}]'
 spec:
   namespace: kommander
   kubernetes:
@@ -43,7 +43,7 @@ spec:
   chartReference:
     chart: kommander
     repo: https://mesosphere.github.io/charts/stable
-    version: 0.11.4
+    version: 0.11.6
     values: |
       ---
       ingress:

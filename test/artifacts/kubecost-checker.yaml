@@ -32,13 +32,6 @@ data:
         curl kommander-kubeaddons-cost-analyzer.kommander.svc:9090
         curl kommander-kubecost-thanos-query-http.kommander.svc:10902
 
-        echo "Checking aggregatedCostModel api endpoint"
-        code=$(curl "kommander-kubeaddons-cost-analyzer.kommander.svc:9090/model/aggregatedCostModel?window=1d&aggregation=namespace" | jq --raw-output '.code')
-        if [[ "$code" -ne 200 ]] ; then
-          echo "Expected code 200, got $code instead"
-          exit 1
-        fi
-
         echo "Checking prometheusQuery api endpoint"
         status=$(curl "kommander-kubeaddons-cost-analyzer.kommander.svc:9090/api/prometheusQuery?query=kubecost_cluster_memory_working_set_bytes" | jq --raw-output '.status')
         if [[ "$status" != "success" ]] ; then

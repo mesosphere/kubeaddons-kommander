@@ -1,0 +1,87 @@
+#!mesosphere/dispatch-starlark:v0.6
+# vi:syntax=python
+#
+#
+
+load("github.com/mesosphere/dispatch-catalog/starlark/stable/git@0.0.7", "git_resource")
+load("github.com/mesosphere/dispatch-catalog/starlark/stable/pipeline@0.0.7", "tag")
+load("github.com/mesosphere/dispatch-catalog/starlark/stable/k8s@0.0.7", "secret_var")
+
+
+git = "src-git"
+git_resource(
+  git,
+  url="https://github.com/mesosphere/kubeaddons-kommander",
+  revision="$(context.git.commit)")
+
+gitops = "gitops-git"
+git_resource(
+  gitops,
+  url="https://github.com/mesosphere/konvoy-soak",
+  revision="master")
+
+
+task("update-soak", inputs=[gitops, git], steps=[
+  v1.Container(
+    name="fetch-master",
+    image="alpine/git:v2.24.3",
+    workingDir="/workspace/" + gitops,
+    args=[
+      "fetch",
+      "origin",
+      "master"
+    ]
+  ),
+  v1.Container(
+    name = "update-kommander-version",
+    image = "mikefarah/yq:3.3.4",
+    workingDir = "/workspace/{}/aws/".format(gitops),
+    command = ["/bin/sh"],
+    args = [
+      "-c",
+      "yq w --doc 1 --inplace cluster.yaml spec.addons[3].configVersion $(context.git.tag)"
+    ]
+  ),
+  v1.Container(
+    name = "update-gitops-repo",
+    image = "mesosphere/update-gitops-repo:1.1.1",
+    workingDir =  "/workspace/" + git,
+    command = ["/bin/sh", "-c"],
+    args = [
+      """
+      set -x
+      depth=10
+      git fetch --tags --depth=$depth origin master
+      tag_head_sha=$(git rev-parse $(context.git.tag))
+      git log origin/master -n $depth | grep -q $tag_head_sha
+      if [ "$?" -eq 1 ]; then
+        echo The commit from tag $(context.git.tag) is not on the master branch
+        exit 0
+      fi
+      set +x
+
+      cd /workspace/gitops-git/aws
+      set -e
+      echo "$GPG_PRIVATE_KEY" > gpg_private_key
+      echo "$GPG_PUBLIC_KEY" > gpg_public_key
+      set -x
+      gpg --import gpg_private_key
+      gpg --import gpg_public_key
+      git config --local commit.gpgsign true
+      git config --local user.signingkey $GPG_KEY_ID
+      git config --local user.name 'Dispatch CI'
+      git config --local user.email '56653984+d2iq-dispatch@users.noreply.github.com'
+      update-gitops-repo \
+        -git-revision={} \
+        -filepath=none.yaml.tmpl \
+        -commit-message="Update Kommander to {}"
+      """.format("$(context.git.commit)", "$(context.git.tag)")
+    ],
+    env=[k8s.corev1.EnvVar(name="GPG_PRIVATE_KEY", valueFrom=secret_var("d2iq-dispatch-gpg", "private_key")),
+          k8s.corev1.EnvVar(name="GPG_PUBLIC_KEY", valueFrom=secret_var("d2iq-dispatch-gpg", "public_key")),
+          k8s.corev1.EnvVar(name="GPG_KEY_ID", valueFrom=secret_var("d2iq-dispatch-gpg", "key_id"))]
+  )
+])
+
+
+action(tasks=["update-soak"], on=tag(names=["*"]))

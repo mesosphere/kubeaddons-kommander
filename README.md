@@ -73,3 +73,10 @@ Sometimes we might need to push a fix for an older version, in these cases we ne
 1. update `mergebot-config.json` on `master` and set its version to the next patch release
 
 There is no need to merge back `stable-*` branches into master since we dont need to maintain a flat history anymore.
+
+# Tests
+
+## E2E
+
+This repo runs the E2E tests against the PRs of this repository.
+You can find more information [in this README](https://github.com/mesosphere/kommander/tree/master/system-tests#system-tests).

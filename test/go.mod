@@ -16,7 +16,7 @@ require (
 	github.com/googleapis/gnostic v0.5.1 // indirect
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/mesosphere/ksphere-testing-framework v0.2.0
-	github.com/mesosphere/kubeaddons v0.20.2
+	github.com/mesosphere/kubeaddons v0.22.2
 	go.uber.org/zap v1.15.0 // indirect
 	golang.org/x/crypto v0.0.0-20200728195943-123391ffb6de // indirect
 	golang.org/x/net v0.0.0-20200813134508-3edf25e44fcc // indirect

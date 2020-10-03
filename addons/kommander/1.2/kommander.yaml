@@ -52,13 +52,42 @@ spec:
         extraAnnotations:
           traefik.ingress.kubernetes.io/priority: "2"
       kommander-licensing:
+        controller:
+          containers:
+            manager:
+              image:
+                repository: mesosphere/kommander-licensing-controller-manager
+                tag: v0.5.0
         certificates:
           issuer:
             name: kubernetes-ca
             kind: ClusterIssuer
+        webhook:
+          image:
+            repository: mesosphere/kommander-licensing-webhook
+            tag: v0.5.0
+            pullPolicy: IfNotPresent
       kommander-federation:
+        controller:
+          containers:
+            manager:
+              image:
+                repository: mesosphere/kommander-federation-controller-manager
+                tag: v0.5.0
+        webhook:
+          image:
+            repository: mesosphere/kommander-federation-webhook
+            tag: v0.5.0
         utilityApiserver:
+          image:
+            repository: mesosphere/kommander-federation-utility-apiserver
+            tag: v0.5.0
           minimumKubernetesVersion: 1.16.0
+        authorizedlister:
+          image:
+            repository: mesosphere/kommander-federation-authorizedlister
+            tag: v0.5.0
+            pullPolicy: IfNotPresent
         certificates:
           issuer:
             name: kubernetes-ca

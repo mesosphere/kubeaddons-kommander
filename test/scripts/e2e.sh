@@ -48,11 +48,14 @@ if [ -z "$LICENSE" ]; then
 fi
 
 function teardown() {
+  set +e # we want everything to run even if individual tasks error
   export KUBECONFIG=$PROJECT_ROOT/admin.conf
   mv "$KOMMANDER_REPO_PATH/system-tests/cypress/videos" "$OUTPUT_PATH/cypress-videos" || echo "No videos"
   mv "$KOMMANDER_REPO_PATH/system-tests/cypress/screenshots" "$OUTPUT_PATH/cypress-screenshots" || echo "No screenshots"
 
   cd "$PROJECT_ROOT"
+  ./konvoy diagnose -o "$OUTPUT_PATH/diagnose.tar.gz"
+
   # Delete provisioned clusters
   kubectl delete konvoycluster --all-namespaces --all --wait
   ./konvoy down --yes

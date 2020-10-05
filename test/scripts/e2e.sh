@@ -8,6 +8,7 @@ NEW_UUID=$(cat /dev/urandom | LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head 
 CONFIG_VERSION=$1
 KOMMANDER_REPO_PATH="${KOMMANDER_REPO_PATH:-$DEFAULT_KOMMANDER_PATH}"
 OUTPUT_PATH="${OUTPUT_PATH:-$DEFAULT_OUTPUT_PATH}"
+KONVOY_VERSION="v1.6.0-beta.1"
 
 if [ ! -d "$KOMMANDER_REPO_PATH" ]; then
   echo "Expected KOMMANDER_REPO_PATH to be set to the kommander repo"
@@ -79,7 +80,7 @@ cd "$PROJECT_ROOT"
 
 # Set up Konvoy
 echo "Setup Konvoy"
-source ${PROJECT_ROOT}/test/scripts/setup-konvoy.sh v1.5.0
+source ${PROJECT_ROOT}/test/scripts/setup-konvoy.sh $KONVOY_VERSION
 
 # Generate SSH Keys
 echo "Generate SSH Keys"
@@ -268,7 +269,7 @@ spec:
       addonsList:
         - name: kommander
           enabled: true
-  version: v1.5.0
+  version: $KONVOY_VERSION
 EOF
 
 # Start the cluster

@@ -17,6 +17,7 @@ import (
 )
 
 const comRepoRef = "master"
+const comRepoRemote = "remote"
 
 func TestKommanderGroup(t *testing.T) {
 	t.Logf("testing group kommander")
@@ -68,7 +69,7 @@ func TestKommanderGroup(t *testing.T) {
 		found = true
 
 		t.Logf("determining old and new versions of Kommander for upgrade testing")
-		oldAddon, err := addontesters.GetLatestAddonRevisionFromLocalRepoBranch("../", comRepoRef, "kommander")
+		oldAddon, err := addontesters.GetLatestAddonRevisionFromLocalRepoBranch("../", comRepoRemote, comRepoRef, "kommander")
 		if err != nil {
 			t.Fatal(err)
 		}

@@ -7,9 +7,9 @@ metadata:
     # TODO: we're temporarily supporting dependency on an existing default storage class
     # on the cluster, this hack will trigger re-queue on Addons until one exists.
     # This was originally added to support the PVC's needed for the Kubecost subcomponent.
-    kubeaddons.mesosphere.io/hack-requires-defaultstorageclass: "true"    
+    kubeaddons.mesosphere.io/hack-requires-defaultstorageclass: "true"
   annotations:
-    catalog.kubeaddons.mesosphere.io/addon-revision: "1.2.0-18"
+    catalog.kubeaddons.mesosphere.io/addon-revision: "1.2.0-19"
     appversion.kubeaddons.mesosphere.io/kommander: "1.2.0-rc.2"
     endpoint.kubeaddons.mesosphere.io/kommander: /ops/portal/kommander/ui
     appversion.kubeaddons.mesosphere.io/thanos: 0.3.21
@@ -21,7 +21,7 @@ metadata:
     docs.kubeaddons.mesosphere.io/thanos: "https://thanos.io/getting-started.md/"
     docs.kubeaddons.mesosphere.io/karma: "https://github.com/prymitive/karma"
     docs.kubeaddons.mesosphere.io/kommander-grafana: "https://grafana.com/docs/"
-    values.chart.helm.kubeaddons.mesosphere.io/kommander: "https://raw.githubusercontent.com/mesosphere/charts/fe2859e6/stable/kommander/values.yaml"
+    values.chart.helm.kubeaddons.mesosphere.io/kommander: "https://raw.githubusercontent.com/mesosphere/charts/c32ef2f/stable/kommander/values.yaml"
 spec:
   namespace: kommander
   kubernetes:
@@ -45,7 +45,7 @@ spec:
   chartReference:
     chart: kommander
     repo: https://mesosphere.github.io/charts/stable
-    version: 0.11.14
+    version: 0.11.15
     values: |
       ---
       ingress:

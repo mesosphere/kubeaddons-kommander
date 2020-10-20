@@ -8,7 +8,8 @@ This [KEP](https://github.com/mesosphere/ksphere-platform/blob/master/keps/sig-k
 
 Kommander currently is supported in three different versions, which are reporesented by their respective branches:
 
-- 1.2 being developed on `master` branch
+- 1.3 being developed on `master` branch
+- 1.2 living on `stable-1.2.x` branch
 - 1.1 living on `stable-1.1.x` branch
 - 1.0 living on `stable-1.0.x` branch
 

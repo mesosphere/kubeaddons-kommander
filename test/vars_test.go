@@ -12,7 +12,7 @@ import (
 
 const (
 	kbaURL    = "https://github.com/mesosphere/kubernetes-base-addons"
-	kbaRef    = "release/2"
+	kbaRef    = "release/3.0"
 	kbaRemote = "origin"
 
 	defaultKubernetesVersion = "1.18.8"

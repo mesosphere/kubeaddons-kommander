@@ -10,13 +10,26 @@ import (
 	"github.com/mesosphere/ksphere-testing-framework/pkg/cluster/kind"
 	"github.com/mesosphere/ksphere-testing-framework/pkg/experimental"
 	testharness "github.com/mesosphere/ksphere-testing-framework/pkg/harness"
+	"github.com/mesosphere/kubeaddons/pkg/api/v1beta2"
 	"github.com/mesosphere/kubeaddons/pkg/constants"
 	addontesters "github.com/mesosphere/kubeaddons/test/utils"
+	"helm.sh/helm/v3/pkg/action"
+	"helm.sh/helm/v3/pkg/chart/loader"
+	"helm.sh/helm/v3/pkg/chartutil"
+	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"sigs.k8s.io/kind/pkg/apis/config/v1alpha4"
 	"sigs.k8s.io/kind/pkg/cluster"
 )
 
 const comRepoRef = "master"
+
+// autoProvisioningChartPath is a path to the `auto-provisioning` chart
+// that can be used to install `auto-provisioning` from `konvoy`.
+// Makefile in this project comes with a target that can prepare the chart.
+// @see: auto-provisioning.prepare-chart
+const autoProvisioningChartPath = "../build/chart/auto-provisioning"
+const autoProvisioningNamespace = "konvoy"
+const autoProvisioningName = "auto-provisioning"
 
 func TestKommanderGroup(t *testing.T) {
 	t.Logf("testing group kommander")
@@ -44,7 +57,89 @@ func TestKommanderGroup(t *testing.T) {
 	stop := make(chan struct{})
 	go experimental.LoggingHook(t, cluster, wg, stop)
 
-	addonDeployment, err := addontesters.DeployAddons(t, cluster, addons...)
+	var certManagerAddon v1beta2.AddonInterface
+	addonsWithoutCertManager := []v1beta2.AddonInterface{}
+	for _, addon := range addons {
+		if addon.GetName() == "cert-manager" {
+			certManagerAddon = addon
+		} else {
+			addonsWithoutCertManager = append(addonsWithoutCertManager, addon)
+		}
+	}
+
+	if certManagerAddon == nil {
+		t.Fatal("failed to find cert manager addon")
+	}
+	installCertManagerAddon, err := addontesters.DeployAddons(t, cluster, certManagerAddon)
+	if err != nil {
+		t.Fatal(err)
+	}
+	waitForCertManager, err := addontesters.WaitForAddons(t, cluster, certManagerAddon)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	installAutoProvisioningJobs := testharness.Jobs{
+		installCertManagerAddon.Jobs[0],
+		waitForCertManager.Jobs[0],
+		func(t *testing.T) error {
+			t.Log("installing auto-provisioning")
+			kubeConfig := genericclioptions.NewConfigFlags(false)
+			kubeConfig.APIServer = &cluster.Config().Host
+			kubeConfig.BearerToken = &cluster.Config().BearerToken
+			kubeConfig.CAFile = &cluster.Config().CAFile
+
+			cfg := &action.Configuration{}
+			err := cfg.Init(
+				kubeConfig,
+				autoProvisioningNamespace,
+				"memory",
+				t.Logf,
+			)
+			if err != nil {
+				return err
+			}
+
+			chart, err := loader.LoadDir(autoProvisioningChartPath)
+			if err != nil {
+				return err
+			}
+
+			values, err := chartutil.ReadValues([]byte(`
+certManagerCertificates:
+  issuer:
+    name: test
+    selfSigned: true
+
+konvoy:
+  allowUnofficialReleases: true
+
+kubeaddonsRepository:
+  validTagPrefixes:
+  - testing
+`))
+			if err != nil {
+				return err
+			}
+
+			installAction := action.NewInstall(cfg)
+			installAction.ReleaseName = autoProvisioningName
+			installAction.Namespace = autoProvisioningNamespace
+			installAction.CreateNamespace = true
+			installAction.Wait = true
+			_, err = installAction.Run(chart, values.AsMap())
+			if err != nil {
+				return fmt.Errorf("failed to install auto-provisioning chart: %w", err)
+			}
+			return nil
+		},
+	}
+	installAutoProvisioning := testharness.Loadable{
+		Plan: testharness.DeployPlan,
+		Jobs: installAutoProvisioningJobs,
+	}
+
+	addonDeployment, err := addontesters.DeployAddons(t, cluster, addonsWithoutCertManager...)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -104,6 +199,7 @@ func TestKommanderGroup(t *testing.T) {
 	th := testharness.NewSimpleTestHarness(t)
 	th.Load(
 		addontesters.ValidateAddons(addons...),
+		installAutoProvisioning,
 		addonDeployment,
 		addonDefaults,
 		addonCleanup)

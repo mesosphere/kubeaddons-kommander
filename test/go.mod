@@ -25,9 +25,10 @@ require (
 	gomodules.xyz/jsonpatch/v2 v2.1.0 // indirect
 	google.golang.org/appengine v1.6.6 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
-	k8s.io/api v0.19.1
-	k8s.io/apiextensions-apiserver v0.19.0-rc.3 // indirect
-	k8s.io/apimachinery v0.19.1
+	helm.sh/helm/v3 v3.4.0
+	k8s.io/api v0.19.2
+	k8s.io/apimachinery v0.19.2
+	k8s.io/cli-runtime v0.19.2
 	k8s.io/klog/v2 v2.3.0 // indirect
 	k8s.io/utils v0.0.0-20200731180307-f00132d28269 // indirect
 	sigs.k8s.io/kind v0.9.0

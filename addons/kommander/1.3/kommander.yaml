@@ -21,14 +21,15 @@ metadata:
     docs.kubeaddons.mesosphere.io/thanos: "https://thanos.io/getting-started.md/"
     docs.kubeaddons.mesosphere.io/karma: "https://github.com/prymitive/karma"
     docs.kubeaddons.mesosphere.io/kommander-grafana: "https://grafana.com/docs/"
-    values.chart.helm.kubeaddons.mesosphere.io/kommander: "https://raw.githubusercontent.com/mesosphere/charts/5f6f40a/stable/kommander/values.yaml"
+    values.chart.helm.kubeaddons.mesosphere.io/kommander: "https://raw.githubusercontent.com/mesosphere/charts/a0d4f6e/stable/kommander/values.yaml"
 spec:
   namespace: kommander
   kubernetes:
-    minSupportedVersion: v1.15.6
+    minSupportedVersion: v1.16.0
   requires:
     - matchLabels:
         kubeaddons.mesosphere.io/name: cert-manager
+        kubeaddons.mesosphere.io/cert-manager: v1
   cloudProvider:
     - name: aws
       enabled: true
@@ -45,7 +46,7 @@ spec:
   chartReference:
     chart: kommander
     repo: https://mesosphere.github.io/charts/stable
-    version: 0.11.18
+    version: 0.12.10
     values: |
       ---
       ingress:

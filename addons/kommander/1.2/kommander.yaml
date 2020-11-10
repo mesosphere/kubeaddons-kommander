@@ -9,7 +9,7 @@ metadata:
     # This was originally added to support the PVC's needed for the Kubecost subcomponent.
     kubeaddons.mesosphere.io/hack-requires-defaultstorageclass: "true"
   annotations:
-    catalog.kubeaddons.mesosphere.io/addon-revision: "1.2.0-31"
+    catalog.kubeaddons.mesosphere.io/addon-revision: "1.2.0-32"
     appversion.kubeaddons.mesosphere.io/kommander: "1.2.0-rc.5"
     endpoint.kubeaddons.mesosphere.io/kommander: /ops/portal/kommander/ui
     appversion.kubeaddons.mesosphere.io/thanos: 0.3.21
@@ -25,7 +25,7 @@ metadata:
 spec:
   namespace: kommander
   kubernetes:
-    minSupportedVersion: v1.15.6
+    minSupportedVersion: v1.16.0
   requires:
     - matchLabels:
         kubeaddons.mesosphere.io/name: cert-manager

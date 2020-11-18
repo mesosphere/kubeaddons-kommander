@@ -49,55 +49,8 @@ spec:
     version: 0.13.6
     values: |
       ---
-      ingress:
-        extraAnnotations:
-          traefik.ingress.kubernetes.io/priority: "2"
-      kommander-licensing:
-        certificates:
-          issuer:
-            name: kubernetes-ca
-            kind: ClusterIssuer
-      kommander-federation:
-        utilityApiserver:
-          minimumKubernetesVersion: 1.16.0
-        certificates:
-          issuer:
-            name: kubernetes-ca
-            kind: ClusterIssuer
-        konvoy:
-          allowUnofficialReleases: false
-        kubefed:
-          controllermanager:
-            annotations:
-              secret.reloader.stakater.com/reload: "kubefed-admission-webhook-serving-cert"
-            webhook:
-              annotations:
-                secret.reloader.stakater.com/reload: "kubefed-admission-webhook-serving-cert"
-      kommander-karma:
-        karma:
-          deployment:
-            annotations:
-              configmap.reloader.stakater.com/reload: kommander-kubeaddons-config
-              secret.reloader.stakater.com/reload: kommander-karma-client-tls
-      kommander-thanos:
-        thanos:
-          query:
-            deploymentAnnotations:
-              secret.reloader.stakater.com/reload: kommander-thanos-client-tls
-      kubeaddons-catalog:
-        ingress:
-          enable: false
-          hostName: catalog.kubeaddons.localhost
-          annotations: {}
-      kommander-ui:
-        podAnnotations: {}
-        #  iam.amazonaws.com/role: xyz
       kubecost:
         cost-analyzer:
           kubecostDeployment:
             labels:
               vendor.kubecost.io/partner: d2iq
-          thanos:
-            query:
-              deploymentAnnotations:
-                secret.reloader.stakater.com/reload: kommander-kubecost-thanos-client-tls

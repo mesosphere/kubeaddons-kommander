@@ -144,7 +144,16 @@ kubeaddonsRepository:
 		t.Fatal(err)
 	}
 
-	addonCleanup, err := addontesters.CleanupAddons(t, cluster, addons...)
+	// there is well known bug of kommander not being able to be uninstalled
+	// https://jira.d2iq.com/browse/D2IQ-63395
+	// remove it from the addon cleanup list
+	addonsToCleanup := make([]v1beta2.AddonInterface, 0)
+	for _, addon := range addons {
+		if addon.GetName() != "kommander" {
+			addonsToCleanup = append(addonsToCleanup, addon)
+		}
+	}
+	addonCleanup, err := addontesters.CleanupAddons(t, cluster, addonsToCleanup...)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -45,9 +45,8 @@ spec:
       enabled: true
   chartReference:
     chart: kommander
-    repo: https://mesosphere.github.io/charts/stable
-    version: 0.13.0
-    # Only keep values here that can not be set in the chart itself
+    repo: https://gracedo.github.io/charts/stable
+    version: 0.13.3
     values: |
       ---
       kubecost:

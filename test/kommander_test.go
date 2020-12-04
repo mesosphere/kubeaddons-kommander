@@ -2,6 +2,8 @@ package test
 
 import (
 	"fmt"
+	"io/ioutil"
+	"os"
 	"strings"
 	"sync"
 	"testing"
@@ -17,7 +19,6 @@ import (
 	"helm.sh/helm/v3/pkg/chart/loader"
 	"helm.sh/helm/v3/pkg/chartutil"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
-	"sigs.k8s.io/kind/pkg/apis/config/v1alpha4"
 	"sigs.k8s.io/kind/pkg/cluster"
 )
 
@@ -30,11 +31,27 @@ const comRepoRef = "master"
 const autoProvisioningChartPath = "../build/chart/auto-provisioning"
 const autoProvisioningNamespace = "konvoy"
 const autoProvisioningName = "auto-provisioning"
+const initialE2EKindConfigPath = "artifacts/kind-config.yaml"
+
+const dockerUsernameEnv = "DOCKERHUB_ROBOT_USERNAME"
+const dockerPasswordEnv = "DOCKERHUB_ROBOT_TOKEN"
 
 func TestKommanderGroup(t *testing.T) {
 	t.Logf("testing group kommander")
 
-	cluster, err := kind.NewClusterWithVersion(semver.MustParse(strings.TrimPrefix(defaultKubernetesVersion, "v")), cluster.CreateWithV1Alpha4Config(&v1alpha4.Cluster{}))
+	var rawKindConfig []byte
+	// If we are in CI, we set the ImageRegistries to use the Docker Hub credentials.
+	if os.Getenv("CI") != "" && os.Getenv(dockerUsernameEnv) != "" && os.Getenv(dockerPasswordEnv) != "" {
+		initialKindConfig, err := ioutil.ReadFile(initialE2EKindConfigPath)
+		if err != nil {
+			t.Fatal(err)
+		}
+		kindConfig := strings.Replace(string(initialKindConfig), "DOCKER_USERNAME", os.Getenv(dockerUsernameEnv), 1)
+		kindConfig = strings.Replace(kindConfig, "DOCKER_PASSWORD", os.Getenv(dockerPasswordEnv), 1)
+		rawKindConfig = []byte(kindConfig)
+	}
+
+	cluster, err := kind.NewClusterWithVersion(semver.MustParse(strings.TrimPrefix(defaultKubernetesVersion, "v")), cluster.CreateWithRawConfig(rawKindConfig))
 	if err != nil {
 		// try to clean up in case cluster was created and reference available
 		if cluster != nil {

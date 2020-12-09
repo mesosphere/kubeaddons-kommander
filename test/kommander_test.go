@@ -191,7 +191,7 @@ kubeaddonsRepository:
 		found = true
 
 		t.Logf("determining old and new versions of Kommander for upgrade testing")
-		oldAddon, err := addontesters.GetLatestAddonRevisionFromLocalRepoBranch("../", comRepoRef, "kommander")
+		oldAddon, err := addontesters.GetLatestAddonRevisionFromLocalRepoBranch("../", "origin", comRepoRef, "kommander")
 		if err != nil {
 			t.Fatal(err)
 		}

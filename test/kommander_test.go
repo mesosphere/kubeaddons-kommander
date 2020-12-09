@@ -59,6 +59,8 @@ func TestKommanderGroup(t *testing.T) {
 		}
 		t.Fatal(err)
 	}
+	// This informs ksphere-testing-framework to gather the logs on cleanup.
+	os.Setenv("KIND_CLUSTER_LOGS_PATH", "/tmp/kind/")
 	defer cluster.Cleanup()
 
 	if err := kubectl("apply", "-f", controllerBundle); err != nil {

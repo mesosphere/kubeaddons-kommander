@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/mesosphere/ksphere-testing-framework/pkg/groups"
+	ktfgroups "github.com/mesosphere/ksphere-testing-framework/pkg/groups"
 	"github.com/mesosphere/kubeaddons/pkg/catalog"
 	"github.com/mesosphere/kubeaddons/pkg/repositories/git"
 	"github.com/mesosphere/kubeaddons/pkg/repositories/local"
@@ -45,7 +45,7 @@ func main() {
 		panic(err)
 	}
 
-	groups, err := groups.AddonsForGroupsFile("groups.yaml", c)
+	groups, err := ktfgroups.AddonsForGroupsFile("groups.yaml", c)
 	if err != nil {
 		panic(err)
 	}

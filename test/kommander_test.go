@@ -27,9 +27,17 @@ const comRepoRef = "master"
 // that can be used to install `auto-provisioning` from `konvoy`.
 // Makefile in this project comes with a target that can prepare the chart.
 // @see: auto-provisioning.prepare-chart
-const autoProvisioningChartPath = "../build/chart/auto-provisioning"
+const autoProvisioningChartPath = "../build/konvoy/chart/auto-provisioning"
 const autoProvisioningNamespace = "konvoy"
 const autoProvisioningName = "auto-provisioning"
+
+// kubeaddonsChartPath is a path to the `kubeaddons` chart
+// that can be used to install `kubeaddons` controller.
+// Makefile in this project comes with a target that can prepare the chart.
+// @see: kubeaddons.prepare-chart
+const kubeaddonsChartPath = "../build/kubeaddons/chart/"
+const kubeaddonsNamespace = "kubeaddons"
+const kubeaddonsName = "kubeaddons"
 
 func TestKommanderGroup(t *testing.T) {
 	t.Logf("testing group kommander")
@@ -44,8 +52,53 @@ func TestKommanderGroup(t *testing.T) {
 	}
 	defer cluster.Cleanup()
 
-	if err := kubectl("apply", "-f", controllerBundle); err != nil {
-		t.Fatal(err)
+	installKubeaddonsControllerJobs := testharness.Jobs{
+		func(t *testing.T) error {
+			t.Log("installing kubeaddons")
+			kubeConfig := genericclioptions.NewConfigFlags(false)
+			kubeConfig.APIServer = &cluster.Config().Host
+			kubeConfig.BearerToken = &cluster.Config().BearerToken
+			kubeConfig.CAFile = &cluster.Config().CAFile
+
+			cfg := &action.Configuration{}
+			err := cfg.Init(
+				kubeConfig,
+				kubeaddonsNamespace,
+				"memory",
+				t.Logf,
+			)
+			if err != nil {
+				return err
+			}
+
+			chart, err := loader.LoadDir(kubeaddonsChartPath)
+			if err != nil {
+				return err
+			}
+
+			values, err := chartutil.ReadValues([]byte(`
+image:
+	tag: v0.23.6
+`))
+			if err != nil {
+				return err
+			}
+
+			installAction := action.NewInstall(cfg)
+			installAction.ReleaseName = kubeaddonsName
+			installAction.Namespace = kubeaddonsNamespace
+			installAction.CreateNamespace = true
+			installAction.Wait = true
+			_, err = installAction.Run(chart, values.AsMap())
+			if err != nil {
+				return fmt.Errorf("failed to install kubeaddons chart: %w", err)
+			}
+			return nil
+		},
+	}
+	installKubeaddonsController := testharness.Loadable{
+		Plan: testharness.DeployPlan,
+		Jobs: installKubeaddonsControllerJobs,
 	}
 
 	addons := groups["kommander"]
@@ -207,6 +260,7 @@ kubeaddonsRepository:
 
 	th := testharness.NewSimpleTestHarness(t)
 	th.Load(
+		installKubeaddonsController,
 		addontesters.ValidateAddons(addons...),
 		installAutoProvisioning,
 		addonDeployment,

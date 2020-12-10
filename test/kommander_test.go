@@ -2,6 +2,8 @@ package test
 
 import (
 	"fmt"
+	"io/ioutil"
+	"os"
 	"strings"
 	"sync"
 	"testing"
@@ -30,11 +32,27 @@ const comRepoRef = "master"
 const autoProvisioningChartPath = "../build/chart/auto-provisioning"
 const autoProvisioningNamespace = "konvoy"
 const autoProvisioningName = "auto-provisioning"
+const initialE2EKindConfigPath = "artifacts/kind-config.yaml"
+
+const dockerUsernameEnv = "DOCKERHUB_ROBOT_USERNAME"
+const dockerPasswordEnv = "DOCKERHUB_ROBOT_TOKEN"
 
 func TestKommanderGroup(t *testing.T) {
 	t.Logf("testing group kommander")
 
-	cluster, err := kind.NewClusterWithVersion(semver.MustParse(strings.TrimPrefix(defaultKubernetesVersion, "v")), cluster.CreateWithV1Alpha4Config(&v1alpha4.Cluster{}))
+	createOption := cluster.CreateWithV1Alpha4Config(&v1alpha4.Cluster{})
+	// If we are in CI, we set the ImageRegistries to use the Docker Hub credentials.
+	if os.Getenv("CI") != "" && os.Getenv(dockerUsernameEnv) != "" && os.Getenv(dockerPasswordEnv) != "" {
+		initialKindConfig, err := ioutil.ReadFile(initialE2EKindConfigPath)
+		if err != nil {
+			t.Fatal(err)
+		}
+		kindConfig := strings.Replace(string(initialKindConfig), "DOCKER_USERNAME", os.Getenv(dockerUsernameEnv), 1)
+		kindConfig = strings.Replace(kindConfig, "DOCKER_PASSWORD", os.Getenv(dockerPasswordEnv), 1)
+		createOption = cluster.CreateWithRawConfig([]byte(kindConfig))
+	}
+
+	cluster, err := kind.NewClusterWithVersion(semver.MustParse(strings.TrimPrefix(defaultKubernetesVersion, "v")), createOption)
 	if err != nil {
 		// try to clean up in case cluster was created and reference available
 		if cluster != nil {
@@ -42,6 +60,8 @@ func TestKommanderGroup(t *testing.T) {
 		}
 		t.Fatal(err)
 	}
+	// This informs ksphere-testing-framework to gather the logs on cleanup.
+	os.Setenv("KIND_CLUSTER_LOGS_PATH", "/tmp/kind/")
 	defer cluster.Cleanup()
 
 	if err := kubectl("apply", "-f", controllerBundle); err != nil {
@@ -172,7 +192,7 @@ kubeaddonsRepository:
 		found = true
 
 		t.Logf("determining old and new versions of Kommander for upgrade testing")
-		oldAddon, err := addontesters.GetLatestAddonRevisionFromLocalRepoBranch("../", comRepoRef, "kommander")
+		oldAddon, err := addontesters.GetLatestAddonRevisionFromLocalRepoBranch("../", "origin", comRepoRef, "kommander")
 		if err != nil {
 			t.Fatal(err)
 		}

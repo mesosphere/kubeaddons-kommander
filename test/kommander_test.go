@@ -82,7 +82,7 @@ func TestKommanderGroup(t *testing.T) {
 	for _, addon := range addons {
 		if addon.GetName() == "cert-manager" {
 			certManagerAddon = addon
-		} else {
+		} else if addon.GetName() != "kommander" {
 			addonsWithoutCertManager = append(addonsWithoutCertManager, addon)
 		}
 	}
@@ -164,8 +164,8 @@ kubeaddonsRepository:
 		t.Fatal(err)
 	}
 
-	// there is well known bug of kommander not being able to be uninstalled
-	// https://jira.d2iq.com/browse/D2IQ-63395
+	// there is a bug of kommander not being able to be uninstalled
+	// https://jira.d2iq.com/browse/D2IQ-73310
 	// remove it from the addon cleanup list
 	addonsToCleanup := make([]v1beta2.AddonInterface, 0)
 	for _, addon := range addons {
@@ -229,11 +229,14 @@ kubeaddonsRepository:
 	th.Load(
 		addontesters.ValidateAddons(addons...),
 		installAutoProvisioning,
+	)
+	// Install kommander just once, using the upgrade test to avoid uninstalling it
+	th.Load(addonUpgrades...)
+	th.Load(
 		addonDeployment,
 		addonDefaults,
-		addonCleanup)
-	th.Load(addonUpgrades...)
-	th.Load(testharness.Loadable{
+		addonCleanup,
+		testharness.Loadable{
 		Plan: testharness.DefaultPlan,
 		Jobs: testharness.Jobs{
 			thanosChecker(t, cluster),

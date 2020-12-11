@@ -159,11 +159,6 @@ kubeaddonsRepository:
 		Jobs: installAutoProvisioningJobs,
 	}
 
-	addonDeployment, err := addontesters.DeployAddons(t, cluster, addonsWithoutCertManager...)
-	if err != nil {
-		t.Fatal(err)
-	}
-
 	// there is a bug of kommander not being able to be uninstalled
 	// https://jira.d2iq.com/browse/D2IQ-73310
 	// remove it from the addon cleanup list
@@ -209,6 +204,7 @@ kubeaddonsRepository:
 		}
 		if oldVersion.EQ(newVersion) {
 			t.Logf("Kommander itself was not updated, ignoring upgrade tests")
+			addonsWithoutCertManager = append(addonsWithoutCertManager, addon)
 			break
 		}
 
@@ -221,6 +217,11 @@ kubeaddonsRepository:
 		addonUpgrades = append(addonUpgrades, addonUpgrade)
 	}
 
+	addonDeployment, err := addontesters.DeployAddons(t, cluster, addonsWithoutCertManager...)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	if !found {
 		t.Fatal(fmt.Errorf("could not find kommander addon in test group, this shouldn't happen"))
 	}
@@ -230,7 +231,8 @@ kubeaddonsRepository:
 		addontesters.ValidateAddons(addons...),
 		installAutoProvisioning,
 	)
-	// Install kommander just once, using the upgrade test to avoid uninstalling it
+	// If upgrade test necessary, install kommander just once in the upgrade test to avoid uninstalling it
+	// If upgrade test not necessary, kommander deployed with addonDeployment
 	th.Load(addonUpgrades...)
 	th.Load(
 		addonDeployment,

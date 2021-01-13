@@ -1,4 +1,4 @@
-#!mesosphere/dispatch-starlark:v0.6
+#!mesosphere/dispatch-starlark:v0.8
 # vi:syntax=python
 #
 #
@@ -84,4 +84,4 @@ task("update-soak", inputs=[gitops, git], steps=[
 ])
 
 
-action(tasks=["update-soak"], on=tag(names=["*"]))
+action(tasks=["update-soak"], on=p.Condition(release=p.ReleaseCondition(tags=["v*"])))

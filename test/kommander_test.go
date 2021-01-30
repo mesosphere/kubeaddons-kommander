@@ -10,11 +10,10 @@ import (
 
 	"github.com/blang/semver"
 	"github.com/mesosphere/ksphere-testing-framework/pkg/cluster/kind"
-	"github.com/mesosphere/ksphere-testing-framework/pkg/experimental"
 	testharness "github.com/mesosphere/ksphere-testing-framework/pkg/harness"
 	"github.com/mesosphere/kubeaddons/pkg/api/v1beta2"
 	"github.com/mesosphere/kubeaddons/pkg/constants"
-	addontesters "github.com/mesosphere/kubeaddons/test/utils"
+	testutils "github.com/mesosphere/kubeaddons/test/utils"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/chart/loader"
 	"helm.sh/helm/v3/pkg/chartutil"
@@ -75,7 +74,7 @@ func TestKommanderGroup(t *testing.T) {
 
 	wg := &sync.WaitGroup{}
 	stop := make(chan struct{})
-	go experimental.LoggingHook(t, cluster, wg, stop)
+	go testutils.LoggingHook(t, cluster, wg, stop)
 
 	var certManagerAddon v1beta2.AddonInterface
 	addonsWithoutCertManager := []v1beta2.AddonInterface{}
@@ -90,11 +89,11 @@ func TestKommanderGroup(t *testing.T) {
 	if certManagerAddon == nil {
 		t.Fatal("failed to find cert manager addon")
 	}
-	installCertManagerAddon, err := addontesters.DeployAddons(t, cluster, certManagerAddon)
+	installCertManagerAddon, err := testutils.DeployAddons(t, cluster, certManagerAddon)
 	if err != nil {
 		t.Fatal(err)
 	}
-	waitForCertManager, err := addontesters.WaitForAddons(t, cluster, certManagerAddon)
+	waitForCertManager, err := testutils.WaitForAddons(t, cluster, certManagerAddon)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -168,12 +167,12 @@ kubeaddonsRepository:
 			addonsToCleanup = append(addonsToCleanup, addon)
 		}
 	}
-	addonCleanup, err := addontesters.CleanupAddons(t, cluster, addonsToCleanup...)
+	addonCleanup, err := testutils.CleanupAddons(t, cluster, addonsToCleanup...)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	addonDefaults, err := addontesters.WaitForAddons(t, cluster, addons...)
+	addonDefaults, err := testutils.WaitForAddons(t, cluster, addons...)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -187,7 +186,7 @@ kubeaddonsRepository:
 		found = true
 
 		t.Logf("determining old and new versions of Kommander for upgrade testing")
-		oldAddon, err := addontesters.GetLatestAddonRevisionFromLocalRepoBranch("../", "origin", comRepoRef, "kommander")
+		oldAddon, err := testutils.GetLatestAddonRevisionFromLocalRepoBranch("../", "origin", comRepoRef, "kommander")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -209,7 +208,7 @@ kubeaddonsRepository:
 		}
 
 		t.Logf("an upgrade test for Kommander from previous version %s to new version %s is needed", oldVersion, newVersion)
-		addonUpgrade, err := addontesters.UpgradeAddon(t, cluster, oldAddon, addon)
+		addonUpgrade, err := testutils.UpgradeAddon(t, cluster, oldAddon, addon)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -217,7 +216,7 @@ kubeaddonsRepository:
 		addonUpgrades = append(addonUpgrades, addonUpgrade)
 	}
 
-	addonDeployment, err := addontesters.DeployAddons(t, cluster, addonsWithoutCertManager...)
+	addonDeployment, err := testutils.DeployAddons(t, cluster, addonsWithoutCertManager...)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -228,7 +227,7 @@ kubeaddonsRepository:
 
 	th := testharness.NewSimpleTestHarness(t)
 	th.Load(
-		addontesters.ValidateAddons(addons...),
+		testutils.ValidateAddons(addons...),
 		installAutoProvisioning,
 	)
 	// If upgrade test necessary, install kommander just once in the upgrade test to avoid uninstalling it
@@ -239,13 +238,13 @@ kubeaddonsRepository:
 		addonDefaults,
 		addonCleanup,
 		testharness.Loadable{
-		Plan: testharness.DefaultPlan,
-		Jobs: testharness.Jobs{
-			thanosChecker(t, cluster),
-			karmaChecker(t, cluster),
-			kubecostChecker(t, cluster),
-		},
-	})
+			Plan: testharness.DefaultPlan,
+			Jobs: testharness.Jobs{
+				thanosChecker(t, cluster),
+				karmaChecker(t, cluster),
+				kubecostChecker(t, cluster),
+			},
+		})
 
 	defer th.Cleanup()
 	th.Validate()

@@ -9,8 +9,8 @@ metadata:
     # This was originally added to support the PVC's needed for the Kubecost subcomponent.
     kubeaddons.mesosphere.io/hack-requires-defaultstorageclass: "true"
   annotations:
-    catalog.kubeaddons.mesosphere.io/addon-revision: "1.3.0-28"
-    appversion.kubeaddons.mesosphere.io/kommander: "1.3.0-rc.5"
+    catalog.kubeaddons.mesosphere.io/addon-revision: "1.3.0-29"
+    appversion.kubeaddons.mesosphere.io/kommander: "1.3.0-rc.6"
     endpoint.kubeaddons.mesosphere.io/kommander: /ops/portal/kommander/ui
     appversion.kubeaddons.mesosphere.io/thanos: 0.3.21
     appversion.kubeaddons.mesosphere.io/karma: 1.4.1

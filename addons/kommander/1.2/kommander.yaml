@@ -45,7 +45,7 @@ spec:
       enabled: true
   chartReference:
     chart: kommander
-    repo: https://mesosphere.github.io/charts/stable
+    repo: https://gracedo.github.io/charts/stable
     version: 0.12.17
     values: |
       ---

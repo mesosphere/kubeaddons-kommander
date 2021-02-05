@@ -9,8 +9,8 @@ metadata:
     # This was originally added to support the PVC's needed for the Kubecost subcomponent.
     kubeaddons.mesosphere.io/hack-requires-defaultstorageclass: "true"
   annotations:
-    catalog.kubeaddons.mesosphere.io/addon-revision: "1.2.0-36"
-    appversion.kubeaddons.mesosphere.io/kommander: "1.2.0-rc.5"
+    catalog.kubeaddons.mesosphere.io/addon-revision: "1.2.1-1"
+    appversion.kubeaddons.mesosphere.io/kommander: "1.2.1"
     endpoint.kubeaddons.mesosphere.io/kommander: /ops/portal/kommander/ui
     appversion.kubeaddons.mesosphere.io/thanos: 0.3.21
     appversion.kubeaddons.mesosphere.io/karma: 1.4.1
@@ -46,7 +46,7 @@ spec:
   chartReference:
     chart: kommander
     repo: https://mesosphere.github.io/charts/stable
-    version: 0.12.16
+    version: 0.12.17
     values: |
       ---
       ingress:

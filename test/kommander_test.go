@@ -62,7 +62,7 @@ func TestKommanderGroup(t *testing.T) {
 	for _, addon := range addons {
 		if addon.GetName() == "cert-manager" {
 			certManagerAddon = addon
-		} else {
+		} else if addon.GetName() != "kommander" {
 			addonsWithoutCertManager = append(addonsWithoutCertManager, addon)
 		}
 	}
@@ -139,13 +139,8 @@ kubeaddonsRepository:
 		Jobs: installAutoProvisioningJobs,
 	}
 
-	addonDeployment, err := addontesters.DeployAddons(t, cluster, addonsWithoutCertManager...)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// there is well known bug of kommander not being able to be uninstalled
-	// https://jira.d2iq.com/browse/D2IQ-63395
+	// there is a bug of kommander not being able to be uninstalled
+	// https://jira.d2iq.com/browse/D2IQ-73310
 	// remove it from the addon cleanup list
 	addonsToCleanup := make([]v1beta2.AddonInterface, 0)
 	for _, addon := range addons {
@@ -189,6 +184,7 @@ kubeaddonsRepository:
 		}
 		if oldVersion.EQ(newVersion) {
 			t.Logf("Kommander itself was not updated, ignoring upgrade tests")
+			addonsWithoutCertManager = append(addonsWithoutCertManager, addon)
 			break
 		}
 
@@ -201,6 +197,11 @@ kubeaddonsRepository:
 		addonUpgrades = append(addonUpgrades, addonUpgrade)
 	}
 
+	addonDeployment, err := addontesters.DeployAddons(t, cluster, addonsWithoutCertManager...)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	if !found {
 		t.Fatal(fmt.Errorf("could not find kommander addon in test group, this shouldn't happen"))
 	}
@@ -209,11 +210,15 @@ kubeaddonsRepository:
 	th.Load(
 		addontesters.ValidateAddons(addons...),
 		installAutoProvisioning,
+	)
+	// If upgrade test necessary, install kommander just once in the upgrade test to avoid uninstalling it
+	// If upgrade test not necessary, kommander deployed with addonDeployment
+	th.Load(addonUpgrades...)
+	th.Load(
 		addonDeployment,
 		addonDefaults,
-		addonCleanup)
-	th.Load(addonUpgrades...)
-	th.Load(testharness.Loadable{
+		addonCleanup,
+		testharness.Loadable{
 		Plan: testharness.DefaultPlan,
 		Jobs: testharness.Jobs{
 			thanosChecker(t, cluster),

@@ -6,9 +6,10 @@ This is a [kubernetes addon](https://github.com/mesosphere/kubeaddons) repositor
 
 This [KEP](https://github.com/mesosphere/ksphere-platform/blob/master/keps/sig-ksphere-catalog/20200818-remove-revisions.md) changed the way we handle revision, which enables this repository to only maintain one revision per branch and removes the need to keep a flat hierarchy on master.
 
-Kommander currently is supported in three different versions, which are reporesented by their respective branches:
+Kommander currently is supported in three different versions, which are represented by their respective branches:
 
-- 1.3 being developed on `master` branch
+- 1.4 being developed on `master` branch
+- 1.3 living on `1.3.x` branch
 - 1.2 living on `1.2.x` branch
 - 1.1 living on `1.1.x` branch
 - 1.0 living on `1.0.x` branch
@@ -46,16 +47,20 @@ When a major issue in "beta 3" is found on SOAK, we will follow the steps above 
 
 ### Prepare Minor GA Release / Branch off maintenance branch
 
-New pre-releases mainly happen on master branch, at some point a `[0-9].[0-9].x` maintenance branch is created for to prepare the GA release of a minor version.
+New pre-releases mainly happen on master branch, at some point a `[0-9].[0-9].x` maintenance branch is created to prepare the GA release of a minor version.
 
 1. fetch latest repo state: `git fetch` and make sure you're on `master`
 1. create new `[0-9].[0-9].x` branch for that minor release: e.g. `git checkout -b 1.1.x`. that way future updates have an easy target and master can carry on with the next minor version.
-1. in order to allow backports to that newly reated minor version, make sure that the charts minor version also is bumped.
+1. in order to allow backports to that newly created minor version, make sure that the chart's minor version also is bumped.
 1. to make it easy for fellow colleagues, rename the existing directory on `master` (e.g. `1.1` -> `1.2`) and update the addons metadata (appversion & revision)
+1. update `mergebot-config.json` on `master` to add a new line for the new stable branch and update the `master` mapping to the next release
 
-From there on, its very similar to releases from `master` branch, there might be a couple RCs before the actual GA tag is cut.
+From there on, it's very similar to releases from `master` branch, there might be a couple RCs before the actual GA tag is cut. When the time comes to cut the GA release, promote the latest RC tags to GA tags: e.g. `v1.3.0` and corresponding stable tags `stable-1.17-1.3.0`, `stable-1.18-1.3.0`, `stable-1.19-1.3.0`.
 
 There is no need to merge back `[0-9].[0-9].x` branches into master since we don't need to maintain a flat history anymore.
+
+#### Release notes
+TBD
 
 ### Dealing with previously released stable versions
 
@@ -65,7 +70,7 @@ Sometimes we might need to push a fix for an older version, in these cases we ne
 
 1. fetch latest repo state: `git fetch`
 1. checkout respective stable branch: e.g. `git checkout 1.0.x`
-1. apply tag: e.g. `git tag v1.0.1 && git push origin v1.0.1`
+1. apply tags: e.g. `git tag v1.0.1 && git push origin v1.0.1` along with corresponding `stable` tags
 1. update `mergebot-config.json` on `master` and set its version to the next patch release
 
-There is no need to merge back `[0-9].[0-9].x` branches into master since we dont need to maintain a flat history anymore.
+There is no need to merge back `[0-9].[0-9].x` branches into master since we don't need to maintain a flat history anymore.

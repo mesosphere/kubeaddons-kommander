@@ -3,7 +3,7 @@
     "enabled": true,
     "interactive": false,
     "fix_version_map": {
-      "master": "Kommander 1.4.0 Beta 0",
+      "master": "Kommander 1.4.0 Beta 1",
       "1.0.x": "Kommander 1.0.3",
       "1.1.x": "Kommander 1.1.4",
       "1.2.x": "Kommander 1.2.1",

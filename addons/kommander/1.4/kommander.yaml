@@ -9,7 +9,7 @@ metadata:
     # This was originally added to support the PVC's needed for the Kubecost subcomponent.
     kubeaddons.mesosphere.io/hack-requires-defaultstorageclass: "true"
   annotations:
-    catalog.kubeaddons.mesosphere.io/addon-revision: "1.4.0-2"
+    catalog.kubeaddons.mesosphere.io/addon-revision: "1.4.0-3"
     appversion.kubeaddons.mesosphere.io/kommander: "1.4.0-beta.1"
     endpoint.kubeaddons.mesosphere.io/kommander: /ops/portal/kommander/ui
     appversion.kubeaddons.mesosphere.io/thanos: 0.3.21
@@ -46,9 +46,12 @@ spec:
   chartReference:
     chart: kommander
     repo: https://mesosphere.github.io/charts/stable
-    version: 0.17.0
+    version: 0.17.2
     values: |
       ---
+      namespaceLabels:
+        - "gatekeeper.d2iq.com/mutate=pod-proxy"
+
       kubecost:
         cost-analyzer:
           kubecostDeployment:

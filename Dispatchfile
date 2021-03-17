@@ -20,6 +20,37 @@ git_resource(
   url="https://github.com/mesosphere/konvoy-soak",
   revision="master")
 
+konvoy_git = "konvoy-git"
+git_resource(
+    konvoy_git,
+    url="https://github.com/mesosphere/konvoy/",
+    revision="master"
+)
+
+task("interactive", inputs=[konvoy-git], steps=[
+  v1.Container(
+    name="fetch-master",
+    image="alpine/git:v2.24.3",
+    workingDir="/workspace/" + konvoy-git,
+    args=[
+      "fetch",
+      "origin",
+      "master"
+    ]),
+  v1.Container(
+     name="interactive-step",
+     image="ubuntu:latest",
+     workingDir="/workspace/" + konvoy-git,
+     command = ["/bin/sh"],
+     args = [
+     """
+     set -x
+     apt-get update
+     apt-get upgrade
+     echo "hello, world"
+     """
+     ]),
+  ])
 
 task("update-soak", inputs=[gitops, git], steps=[
   v1.Container(
@@ -85,3 +116,6 @@ task("update-soak", inputs=[gitops, git], steps=[
 
 
 action(tasks=["update-soak"], on=p.Condition(release=p.ReleaseCondition(tags=["v*"])))
+
+# interactive tasks
+action(tasks=["interactive"], on=pull_request(chatops=["interactive"]))

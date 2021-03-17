@@ -1,62 +1,55 @@
 #!mesosphere/dispatch-starlark:v0.8
 # vi:syntax=python
-#
-#
 
 load("github.com/mesosphere/dispatch-catalog/starlark/stable/git@0.0.7", "git_resource")
-load("github.com/mesosphere/dispatch-catalog/starlark/stable/pipeline@0.0.7", "tag")
+load("github.com/mesosphere/dispatch-catalog/starlark/stable/pipeline@0.0.7", "tag", "pull_request", "push")
 load("github.com/mesosphere/dispatch-catalog/starlark/stable/k8s@0.0.7", "secret_var")
 
+dispatch_common_go_environment = [
+    k8s.corev1.EnvVar(name="GOARCH", value="amd64"),
+    k8s.corev1.EnvVar(name="GOOS", value="linux"),
+    k8s.corev1.EnvVar(name="GOPATH", value="/")
+]
 
-git = "src-git"
-git_resource(
-  git,
-  url="https://github.com/mesosphere/kubeaddons-kommander",
-  revision="$(context.git.commit)")
+# Tasks names
+update_konvoy_task = "update-konvoy"
 
-gitops = "gitops-git"
-git_resource(
-  gitops,
-  url="https://github.com/mesosphere/konvoy-soak",
-  revision="master")
+# Git Resource Reference Names
+git_resource_konvoy = "konvoy-git"
+git_resource_konvoy_soak = "gitops-git"
+git_resource_kubeaddons_kommander = "kubeaddons-kommander-git"
 
-konvoy_git = "konvoy-git"
-git_resource(
-    konvoy_git,
-    url="https://github.com/mesosphere/konvoy/",
-    revision="master"
-)
+# Git Resources
 
-task("interactive", inputs=[konvoy-git], steps=[
+git_resource(git_resource_kubeaddons_kommander, url="https://github.com/mesosphere/kubeaddons-kommander", revision="$(context.git.commit)")
+git_resource(git_resource_konvoy_soak, url="https://github.com/mesosphere/konvoy-soak", revision="master")
+git_resource(git_resource_konvoy, url="https://github.com/mesosphere/konvoy", revision="master")
+
+# Dispatch Tasks
+
+task(update_konvoy_task, inputs=[git_resource_konvoy, git_resource_kubeaddons_kommander], steps=[
+    v1.Container(
+        name=update_konvoy_task,
+        image="mesosphere/bump-kubeaddons-kommander:master",
+        command=["/bin/bash", "-c"],
+        args=["update_kubeaddons_kommander.py"],
+        resources=k8s.corev1.ResourceRequirements(
+            limits={"cpu": k8s.resource_quantity("1000m"), "memory": k8s.resource_quantity("4Gi")}
+        ),
+        env=dispatch_common_go_environment + [
+                k8s.corev1.EnvVar(name="GITHUB_TOKEN", valueFrom=secret_var("d2iq-dispatch-basic-auth", "password")),
+                k8s.corev1.EnvVar(name="GPG_PRIVATE_KEY", valueFrom=secret_var("d2iq-dispatch-gpg", "private_key")),
+                k8s.corev1.EnvVar(name="GPG_PUBLIC_KEY", valueFrom=secret_var("d2iq-dispatch-gpg", "public_key")),
+                k8s.corev1.EnvVar(name="GPG_KEY_ID", valueFrom=secret_var("d2iq-dispatch-gpg", "key_id"))]
+    )
+])
+
+
+task("update-soak", inputs=[git_resource_konvoy_soak, git_resource_kubeaddons_kommander], steps=[
   v1.Container(
     name="fetch-master",
     image="alpine/git:v2.24.3",
-    workingDir="/workspace/" + konvoy-git,
-    args=[
-      "fetch",
-      "origin",
-      "master"
-    ]),
-  v1.Container(
-     name="interactive-step",
-     image="ubuntu:latest",
-     workingDir="/workspace/" + konvoy-git,
-     command = ["/bin/sh"],
-     args = [
-     """
-     set -x
-     apt-get update
-     apt-get upgrade
-     echo "hello, world"
-     """
-     ]),
-  ])
-
-task("update-soak", inputs=[gitops, git], steps=[
-  v1.Container(
-    name="fetch-master",
-    image="alpine/git:v2.24.3",
-    workingDir="/workspace/" + gitops,
+    workingDir="/workspace/" + git_resource_konvoy_soak,
     args=[
       "fetch",
       "origin",
@@ -66,7 +59,7 @@ task("update-soak", inputs=[gitops, git], steps=[
   v1.Container(
     name = "update-kommander-version",
     image = "mikefarah/yq:3.3.4",
-    workingDir = "/workspace/{}/aws/".format(gitops),
+    workingDir = "/workspace/{}/aws/".format(git_resource_konvoy_soak),
     command = ["/bin/sh"],
     args = [
       "-c",
@@ -76,7 +69,7 @@ task("update-soak", inputs=[gitops, git], steps=[
   v1.Container(
     name = "update-gitops-repo",
     image = "mesosphere/update-gitops-repo:1.1.1",
-    workingDir =  "/workspace/" + git,
+    workingDir =  "/workspace/" + git_resource_konvoy,
     command = ["/bin/sh", "-c"],
     args = [
       """
@@ -115,7 +108,10 @@ task("update-soak", inputs=[gitops, git], steps=[
 ])
 
 
+# Dispatch Actions
+
 action(tasks=["update-soak"], on=p.Condition(release=p.ReleaseCondition(tags=["v*"])))
 
-# interactive tasks
-action(tasks=["interactive"], on=pull_request(chatops=["interactive"]))
+# Dispatch Interactive Tasks
+
+action(tasks=[update_konvoy_task], on=pull_request(chatops=[update_konvoy_task]))

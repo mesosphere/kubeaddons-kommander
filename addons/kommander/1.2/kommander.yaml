@@ -9,8 +9,8 @@ metadata:
     # This was originally added to support the PVC's needed for the Kubecost subcomponent.
     kubeaddons.mesosphere.io/hack-requires-defaultstorageclass: "true"
   annotations:
-    catalog.kubeaddons.mesosphere.io/addon-revision: "1.2.1-2"
-    appversion.kubeaddons.mesosphere.io/kommander: "1.2.1"
+    catalog.kubeaddons.mesosphere.io/addon-revision: "1.2.2-1"
+    appversion.kubeaddons.mesosphere.io/kommander: "1.2.2"
     endpoint.kubeaddons.mesosphere.io/kommander: /ops/portal/kommander/ui
     appversion.kubeaddons.mesosphere.io/thanos: 0.3.21
     appversion.kubeaddons.mesosphere.io/karma: 1.4.1
@@ -21,7 +21,7 @@ metadata:
     docs.kubeaddons.mesosphere.io/thanos: "https://thanos.io/getting-started.md/"
     docs.kubeaddons.mesosphere.io/karma: "https://github.com/prymitive/karma"
     docs.kubeaddons.mesosphere.io/kommander-grafana: "https://grafana.com/docs/"
-    values.chart.helm.kubeaddons.mesosphere.io/kommander: "https://raw.githubusercontent.com/mesosphere/charts/4d32c2a993832e4bbee42503276830f8ef5c6733/stable/kommander/values.yaml"
+    values.chart.helm.kubeaddons.mesosphere.io/kommander: "https://raw.githubusercontent.com/mesosphere/charts/3cc5a973711ed56502ce70282dd16ae1ef8d2f26/stable/kommander/values.yaml"
 spec:
   namespace: kommander
   kubernetes:
@@ -46,7 +46,7 @@ spec:
   chartReference:
     chart: kommander
     repo: https://mesosphere.github.io/charts/stable
-    version: 0.12.19
+    version: 0.12.20
     values: |
       ---
       ingress:

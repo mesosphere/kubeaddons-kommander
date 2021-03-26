@@ -32,7 +32,7 @@ task(update_konvoy_task, inputs=[git_resource_konvoy, git_resource_kubeaddons_ko
         name=update_konvoy_task,
         image="mesosphere/bump-kubeaddons-kommander:master",
         command=["/bin/bash", "-c"],
-        args=["update_kubeaddons_kommander.py"],
+        args=["update_kubeaddons_kommander.py", "--kubeaddons_kommander_tag", "$(context.git.tag)"],
         resources=k8s.corev1.ResourceRequirements(
             limits={"cpu": k8s.resource_quantity("1000m"), "memory": k8s.resource_quantity("4Gi")}
         ),
@@ -111,6 +111,7 @@ task("update-soak", inputs=[git_resource_konvoy_soak, git_resource_kubeaddons_ko
 # Dispatch Actions
 
 action(tasks=["update-soak"], on=p.Condition(release=p.ReleaseCondition(tags=["v*"])))
+action(tasks=[update_konvoy_task], on=p.Condition(release=p.ReleaseCondition(tags=["v*"])))
 
 # Dispatch Interactive Tasks
 

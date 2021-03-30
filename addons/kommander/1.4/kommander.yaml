@@ -51,7 +51,9 @@ spec:
       ---
       namespaceLabels:
         - "gatekeeper.d2iq.com/mutate=pod-proxy"
-
+      kommander-federation:
+        kubetunnel:
+          enabled: true
       kubecost:
         cost-analyzer:
           kubecostDeployment:

@@ -54,6 +54,9 @@ spec:
       kommander-federation:
         kubetunnel:
           enabled: true
+          issuer:
+            name: tunnel
+            selfSigned: true
       kubecost:
         cost-analyzer:
           kubecostDeployment:

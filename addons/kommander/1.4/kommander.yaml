@@ -9,7 +9,7 @@ metadata:
     # This was originally added to support the PVC's needed for the Kubecost subcomponent.
     kubeaddons.mesosphere.io/hack-requires-defaultstorageclass: "true"
   annotations:
-    catalog.kubeaddons.mesosphere.io/addon-revision: "1.4.0-13"
+    catalog.kubeaddons.mesosphere.io/addon-revision: "1.4.0-14"
     appversion.kubeaddons.mesosphere.io/kommander: "1.4.0-beta.3"
     endpoint.kubeaddons.mesosphere.io/kommander: /ops/portal/kommander/ui
     appversion.kubeaddons.mesosphere.io/thanos: 0.3.21
@@ -53,7 +53,7 @@ spec:
         - "gatekeeper.d2iq.com/mutate=pod-proxy"
       kommander-federation:
         kubetunnel:
-          enabled: true
+          enabled: false
           serviceMonitor:
             enabled: false
           issuer:

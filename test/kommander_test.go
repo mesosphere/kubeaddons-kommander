@@ -2,8 +2,10 @@ package test
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 	"testing"
@@ -35,6 +37,11 @@ const initialE2EKindConfigPath = "artifacts/kind-config.yaml"
 
 const dockerUsernameEnv = "DOCKERHUB_ROBOT_USERNAME"
 const dockerPasswordEnv = "DOCKERHUB_ROBOT_TOKEN"
+
+
+const tempDir = "/tmp/kubeaddons-kommander"
+const kubeaddonsControllerNamespace = "kubeaddons"
+const kubeaddonsControllerPodPrefix = "kubeaddons-controller-manager-"
 
 func TestKommanderGroup(t *testing.T) {
 	t.Logf("testing group kommander")
@@ -245,6 +252,38 @@ kubeaddonsRepository:
 				kubecostChecker(t, cluster),
 			},
 		})
+
+	// Collect kubeaddons controller logs during cleanup.
+	th.Load(testharness.Loadable{
+		Plan: testharness.CleanupPlan,
+		Jobs: testharness.Jobs{func(t *testing.T) error {
+			if err := os.MkdirAll(tempDir, 0755); err != nil {
+				t.Fatal(err)
+			}
+			dir, err := ioutil.TempDir(tempDir, "kommander-")
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			logFilePath := filepath.Join(dir, "kubeaddons-controller-log.txt")
+			t.Logf("INFO: writing kubeaddons controller logs to %s", logFilePath)
+
+			logFile, err := os.Create(logFilePath)
+			if err != nil {
+				return err
+			}
+			defer logFile.Close()
+
+			logs, err := logsFromPodWithPrefix(cluster, kubeaddonsControllerNamespace, kubeaddonsControllerPodPrefix)
+			if err != nil {
+				return err
+			}
+			defer logs.Close()
+
+			_, err = io.Copy(logFile, logs)
+			return err
+		}},
+	})
 
 	defer th.Cleanup()
 	th.Validate()

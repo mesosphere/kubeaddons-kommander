@@ -12,7 +12,9 @@ dispatch_common_go_environment = [
 ]
 
 # Tasks names
-update_konvoy_task = "update-konvoy"
+update_konvoy_master = "update-konvoy-master"
+update_konvoy_r17 = "update-konvoy-r17"
+update_konvoy_r16 = "update-konvoy-r16"
 
 # Git Resource Reference Names
 git_resource_konvoy = "konvoy-git"
@@ -27,12 +29,46 @@ git_resource(git_resource_konvoy, url="https://github.com/mesosphere/konvoy", re
 
 # Dispatch Tasks
 
-task(update_konvoy_task, inputs=[git_resource_konvoy, git_resource_kubeaddons_kommander], steps=[
+task(update_konvoy_master, inputs=[git_resource_konvoy, git_resource_kubeaddons_kommander], steps=[
     v1.Container(
-        name=update_konvoy_task,
+        name=update_konvoy_master,
         image="mesosphere/bump-kubeaddons-kommander:master",
         command=["/bin/bash", "-c"],
-        args=["update_kubeaddons_kommander.py", "--kubeaddons_kommander_tag", "$(context.git.tag)"],
+        args=["update_kubeaddons_kommander.py", "--konvoy-target-branch", "master", "--kubeaddons_kommander_tag", "$(context.git.tag)"],
+        resources=k8s.corev1.ResourceRequirements(
+            limits={"cpu": k8s.resource_quantity("1000m"), "memory": k8s.resource_quantity("4Gi")}
+        ),
+        env=dispatch_common_go_environment + [
+                k8s.corev1.EnvVar(name="GITHUB_TOKEN", valueFrom=secret_var("d2iq-dispatch-basic-auth", "password")),
+                k8s.corev1.EnvVar(name="GPG_PRIVATE_KEY", valueFrom=secret_var("d2iq-dispatch-gpg", "private_key")),
+                k8s.corev1.EnvVar(name="GPG_PUBLIC_KEY", valueFrom=secret_var("d2iq-dispatch-gpg", "public_key")),
+                k8s.corev1.EnvVar(name="GPG_KEY_ID", valueFrom=secret_var("d2iq-dispatch-gpg", "key_id"))]
+    )
+])
+
+task(update_konvoy_r17, inputs=[git_resource_konvoy, git_resource_kubeaddons_kommander], steps=[
+    v1.Container(
+        name=update_konvoy_r17,
+        image="mesosphere/bump-kubeaddons-kommander:master",
+        command=["/bin/bash", "-c"],
+        args=["update_kubeaddons_kommander.py", "--konvoy-target-branch", "release-1.7", "--kubeaddons_kommander_tag", "$(context.git.tag)"],
+        resources=k8s.corev1.ResourceRequirements(
+            limits={"cpu": k8s.resource_quantity("1000m"), "memory": k8s.resource_quantity("4Gi")}
+        ),
+        env=dispatch_common_go_environment + [
+                k8s.corev1.EnvVar(name="GITHUB_TOKEN", valueFrom=secret_var("d2iq-dispatch-basic-auth", "password")),
+                k8s.corev1.EnvVar(name="GPG_PRIVATE_KEY", valueFrom=secret_var("d2iq-dispatch-gpg", "private_key")),
+                k8s.corev1.EnvVar(name="GPG_PUBLIC_KEY", valueFrom=secret_var("d2iq-dispatch-gpg", "public_key")),
+                k8s.corev1.EnvVar(name="GPG_KEY_ID", valueFrom=secret_var("d2iq-dispatch-gpg", "key_id"))]
+    )
+])
+
+task(update_konvoy_r16, inputs=[git_resource_konvoy, git_resource_kubeaddons_kommander], steps=[
+    v1.Container(
+        name=update_konvoy_r16,
+        image="mesosphere/bump-kubeaddons-kommander:master",
+        command=["/bin/bash", "-c"],
+        args=["update_kubeaddons_kommander.py", "--konvoy-target-branch", "release-1.6", "--kubeaddons_kommander_tag", "$(context.git.tag)"],
         resources=k8s.corev1.ResourceRequirements(
             limits={"cpu": k8s.resource_quantity("1000m"), "memory": k8s.resource_quantity("4Gi")}
         ),
@@ -111,8 +147,17 @@ task("update-soak", inputs=[git_resource_konvoy_soak, git_resource_kubeaddons_ko
 # Dispatch Actions
 
 action(tasks=["update-soak"], on=p.Condition(release=p.ReleaseCondition(tags=["v*"])))
-action(tasks=[update_konvoy_task], on=p.Condition(release=p.ReleaseCondition(tags=["v*"])))
 
-# Dispatch Interactive Tasks
+action(tasks=[update_konvoy_master], on=p.Condition(release=p.ReleaseCondition(tags=["testing-1.20*"])))
+action(tasks=[update_konvoy_master], on=p.Condition(release=p.ReleaseCondition(tags=["stable-1.20*"])))
 
-action(tasks=[update_konvoy_task], on=pull_request(chatops=[update_konvoy_task]))
+action(tasks=[update_konvoy_r17], on=p.Condition(release=p.ReleaseCondition(tags=["testing-1.19*"])))
+action(tasks=[update_konvoy_r17], on=p.Condition(release=p.ReleaseCondition(tags=["stable-1.19*"])))
+
+action(tasks=[update_konvoy_r16], on=p.Condition(release=p.ReleaseCondition(tags=["testing-1.18*"])))
+action(tasks=[update_konvoy_r16], on=p.Condition(release=p.ReleaseCondition(tags=["stable-1.18*"])))
+
+
+# Dispatch Interactive Tasks - Useful only for testing
+
+action(tasks=[update_konvoy_master], on=pull_request(chatops=[update_konvoy_master]))

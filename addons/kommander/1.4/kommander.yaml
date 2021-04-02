@@ -54,6 +54,8 @@ spec:
       kommander-federation:
         kubetunnel:
           enabled: true
+          serviceMonitor:
+            enabled: false
           issuer:
             name: tunnel
             selfSigned: true

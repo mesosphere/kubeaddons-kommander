@@ -40,7 +40,7 @@ task(update_konvoy_master, inputs=[git_resource_konvoy, git_resource_kubeaddons_
         name=update_konvoy_master,
         image="mesosphere/bump-kubeaddons-kommander:master",
         command=["/bin/bash", "-c"],
-        args=["update_kubeaddons_kommander.py", "--konvoy-target-branch", "master", "--kubeaddons_kommander_tag", "$(context.git.tag)"],
+        args=["update_kubeaddons_kommander.py", "--konvoy_target_branch", "master", "--kubeaddons_kommander_tag", "$(context.git.tag)"],
         resources=k8s.corev1.ResourceRequirements(
             limits={"cpu": k8s.resource_quantity("1000m"), "memory": k8s.resource_quantity("4Gi")}
         ),
@@ -53,7 +53,7 @@ task(update_konvoy_r17, inputs=[git_resource_konvoy, git_resource_kubeaddons_kom
         name=update_konvoy_r17,
         image="mesosphere/bump-kubeaddons-kommander:master",
         command=["/bin/bash", "-c"],
-        args=["update_kubeaddons_kommander.py", "--konvoy-target-branch", "release-1.7", "--kubeaddons_kommander_tag", "$(context.git.tag)"],
+        args=["update_kubeaddons_kommander.py", "--konvoy_target_branch", "release-1.7", "--kubeaddons_kommander_tag", "$(context.git.tag)"],
         resources=k8s.corev1.ResourceRequirements(
             limits={"cpu": k8s.resource_quantity("1000m"), "memory": k8s.resource_quantity("4Gi")}
         ),
@@ -66,7 +66,7 @@ task(update_konvoy_r16, inputs=[git_resource_konvoy, git_resource_kubeaddons_kom
         name=update_konvoy_r16,
         image="mesosphere/bump-kubeaddons-kommander:master",
         command=["/bin/bash", "-c"],
-        args=["update_kubeaddons_kommander.py", "--konvoy-target-branch", "release-1.6", "--kubeaddons_kommander_tag", "$(context.git.tag)"],
+        args=["update_kubeaddons_kommander.py", "--konvoy_target_branch", "release-1.6", "--kubeaddons_kommander_tag", "$(context.git.tag)"],
         resources=k8s.corev1.ResourceRequirements(
             limits={"cpu": k8s.resource_quantity("1000m"), "memory": k8s.resource_quantity("4Gi")}
         ),

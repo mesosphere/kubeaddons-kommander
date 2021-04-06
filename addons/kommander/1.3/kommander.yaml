@@ -21,7 +21,7 @@ metadata:
     docs.kubeaddons.mesosphere.io/thanos: "https://thanos.io/getting-started.md/"
     docs.kubeaddons.mesosphere.io/karma: "https://github.com/prymitive/karma"
     docs.kubeaddons.mesosphere.io/kommander-grafana: "https://grafana.com/docs/"
-    values.chart.helm.kubeaddons.mesosphere.io/kommander: "https://raw.githubusercontent.com/mesosphere/charts/9dc05ee23c7440a978423c69e000da78fb324c5a/stable/kommander/values.yaml"
+    values.chart.helm.kubeaddons.mesosphere.io/kommander: "https://raw.githubusercontent.com/mesosphere/charts/32f07b8ce6ae9c516879d93c1d5b551b29e03449/stable/kommander/values.yaml"
 spec:
   namespace: kommander
   kubernetes:
@@ -46,7 +46,7 @@ spec:
   chartReference:
     chart: kommander
     repo: https://mesosphere.github.io/charts/stable
-    version: 0.15.6
+    version: 0.15.8
     values: |
       ---
       kubecost:

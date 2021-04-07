@@ -1,6 +1,7 @@
 package test
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -22,7 +23,7 @@ import (
 	"sigs.k8s.io/kind/pkg/cluster"
 )
 
-const comRepoRef = "master"
+const defaultKommanderRepoRef = "master"
 
 // autoProvisioningChartPath is a path to the `auto-provisioning` chart
 // that can be used to install `auto-provisioning` from `konvoy`.
@@ -36,8 +37,18 @@ const initialE2EKindConfigPath = "artifacts/kind-config.yaml"
 const dockerUsernameEnv = "DOCKERHUB_ROBOT_USERNAME"
 const dockerPasswordEnv = "DOCKERHUB_ROBOT_TOKEN"
 
+var kommanderBranchFlag = flag.String("kommander-branch", "", "")
+var kommanderRepoRef string
+
 func TestKommanderGroup(t *testing.T) {
 	t.Logf("testing group kommander")
+
+	flag.Parse()
+	if *kommanderBranchFlag != "" {
+		kommanderRepoRef = *kommanderBranchFlag
+	} else {
+		kommanderRepoRef = defaultKommanderRepoRef
+	}
 
 	createOption := cluster.CreateWithV1Alpha4Config(&v1alpha4.Cluster{})
 	// If we are in CI, we set the ImageRegistries to use the Docker Hub credentials.
@@ -186,7 +197,7 @@ kubeaddonsRepository:
 		found = true
 
 		t.Logf("determining old and new versions of Kommander for upgrade testing")
-		oldAddon, err := testutils.GetLatestAddonRevisionFromLocalRepoBranch("../", "origin", comRepoRef, "kommander")
+		oldAddon, err := testutils.GetLatestAddonRevisionFromLocalRepoBranch("../", "origin", kommanderRepoRef, "kommander")
 		if err != nil {
 			t.Fatal(err)
 		}

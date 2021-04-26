@@ -10,7 +10,7 @@ metadata:
     kubeaddons.mesosphere.io/hack-requires-defaultstorageclass: "true"
   annotations:
     catalog.kubeaddons.mesosphere.io/addon-revision: "1.4.0-20"
-    appversion.kubeaddons.mesosphere.io/kommander: "1.4.0-rc.2"
+    appversion.kubeaddons.mesosphere.io/kommander: "1.4.0-rc.3"
     endpoint.kubeaddons.mesosphere.io/kommander: /ops/portal/kommander/ui
     appversion.kubeaddons.mesosphere.io/thanos: 0.3.21
     appversion.kubeaddons.mesosphere.io/karma: 1.4.1

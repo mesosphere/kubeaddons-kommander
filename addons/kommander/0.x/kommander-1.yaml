@@ -1,0 +1,66 @@
+apiVersion: kubeaddons.mesosphere.io/v1beta1
+kind: ClusterAddon
+metadata:
+  name: kommander
+  labels:
+    kubeaddons.mesosphere.io/name: kommander
+    # TODO: we're temporarily supporting dependency on an existing default storage class
+    # on the cluster, this hack will trigger re-queue on Addons until one exists.
+    # This was originally added to support the PVC's needed for the Kubecost subcomponent.
+    kubeaddons.mesosphere.io/hack-requires-defaultstorageclass: "true"
+  annotations:
+    catalog.kubeaddons.mesosphere.io/addon-revision: "1.5.0-2"
+    appversion.kubeaddons.mesosphere.io/kommander: "1.5.0-beta.0"
+    endpoint.kubeaddons.mesosphere.io/kommander: /ops/portal/kommander/ui
+    appversion.kubeaddons.mesosphere.io/thanos: 0.3.21
+    appversion.kubeaddons.mesosphere.io/karma: 1.4.1
+    appversion.kubeaddons.mesosphere.io/kommander-grafana: 6.6.0
+    endpoint.kubeaddons.mesosphere.io/thanos: /ops/portal/kommander/monitoring/query
+    endpoint.kubeaddons.mesosphere.io/karma: /ops/portal/kommander/monitoring/karma
+    endpoint.kubeaddons.mesosphere.io/kommander-grafana: "/ops/portal/kommander/monitoring/grafana"
+    docs.kubeaddons.mesosphere.io/thanos: "https://thanos.io/getting-started.md/"
+    docs.kubeaddons.mesosphere.io/karma: "https://github.com/prymitive/karma"
+    docs.kubeaddons.mesosphere.io/kommander-grafana: "https://grafana.com/docs/"
+    values.chart.helm.kubeaddons.mesosphere.io/kommander: "https://raw.githubusercontent.com/mesosphere/charts/fb870d749fa37dc6e54b109c657d7b89936b0cac/stable/kommander/values.yaml"
+spec:
+  namespace: kommander
+  kubernetes:
+    minSupportedVersion: v1.16.0
+  requires:
+  - matchLabels:
+      kubeaddons.mesosphere.io/name: cert-manager
+      kubeaddons.mesosphere.io/cert-manager: v1
+  cloudProvider:
+  - name: aws
+    enabled: true
+  - name: azure
+    enabled: true
+  - name: gcp
+    enabled: true
+  - name: vsphere
+    enabled: true
+  - name: docker
+    enabled: true
+  - name: none
+    enabled: true
+  chartReference:
+    chart: kommander
+    repo: https://mesosphere.github.io/charts/stable
+    version: 0.32.0
+    values: |
+      ---
+      namespaceLabels:
+        - "gatekeeper.d2iq.com/mutate=pod-proxy"
+      kommander-federation:
+        kubetunnel:
+          enabled: true
+          serviceMonitor:
+            enabled: false
+          issuer:
+            name: tunnel
+            selfSigned: true
+      kubecost:
+        cost-analyzer:
+          kubecostDeployment:
+            labels:
+              vendor.kubecost.io/partner: d2iq

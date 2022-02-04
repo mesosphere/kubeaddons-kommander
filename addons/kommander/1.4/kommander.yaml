@@ -49,6 +49,10 @@ spec:
     version: 0.39.0
     values: |
       ---
+      federate:
+        initializer:
+          repository: mesosphere/kubeaddons-addon-initializer
+          tag: v0.5.4
       namespaceLabels:
         - "gatekeeper.d2iq.com/mutate=pod-proxy"
       kommander-federation:

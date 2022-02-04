@@ -9,7 +9,7 @@ metadata:
     # This was originally added to support the PVC's needed for the Kubecost subcomponent.
     kubeaddons.mesosphere.io/hack-requires-defaultstorageclass: "true"
   annotations:
-    catalog.kubeaddons.mesosphere.io/addon-revision: "1.4.4-1"
+    catalog.kubeaddons.mesosphere.io/addon-revision: "1.4.4-2"
     appversion.kubeaddons.mesosphere.io/kommander: "1.4.4"
     endpoint.kubeaddons.mesosphere.io/kommander: /ops/portal/kommander/ui
     appversion.kubeaddons.mesosphere.io/thanos: 0.3.21
@@ -21,7 +21,7 @@ metadata:
     docs.kubeaddons.mesosphere.io/thanos: "https://thanos.io/getting-started.md/"
     docs.kubeaddons.mesosphere.io/karma: "https://github.com/prymitive/karma"
     docs.kubeaddons.mesosphere.io/kommander-grafana: "https://grafana.com/docs/"
-    values.chart.helm.kubeaddons.mesosphere.io/kommander: "https://raw.githubusercontent.com/mesosphere/charts/bf5beab/stable/kommander/values.yaml"
+    values.chart.helm.kubeaddons.mesosphere.io/kommander: "https://raw.githubusercontent.com/mesosphere/charts/9de72cb/stable/kommander/values.yaml"
 spec:
   namespace: kommander
   kubernetes:
@@ -46,9 +46,13 @@ spec:
   chartReference:
     chart: kommander
     repo: https://mesosphere.github.io/charts/stable
-    version: 0.38.6
+    version: 0.39.0
     values: |
       ---
+      federate:
+        initializer:
+          repository: mesosphere/kubeaddons-addon-initializer
+          tag: v0.5.4
       namespaceLabels:
         - "gatekeeper.d2iq.com/mutate=pod-proxy"
       kommander-federation:
